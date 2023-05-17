@@ -873,6 +873,6 @@ MonoBehaviour:
   - {fileID: 1033414508}
   - {fileID: 1338038609}
   - {fileID: 262161499}
-  populationSize: 50
+  populationSize: 5
   trailTime: 10
   timeScale: 2

@@ -93,6 +93,7 @@ public class PopulationManager : MonoBehaviour
                     population.Add(Breed(sortedList[j], sortedList[i]));
                     if (population.Count == populationSize) break;
                 }
+                if(population.Count == populationSize) break;
             }
         }
 
