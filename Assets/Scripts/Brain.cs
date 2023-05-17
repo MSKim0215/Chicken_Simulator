@@ -13,11 +13,6 @@ public class Brain : MonoBehaviour
 
     public float feedsFound = 0;
 
-    private void Start()
-    {
-        Init();
-    }
-
     public void Init()
     {
         dna = new DNA();
