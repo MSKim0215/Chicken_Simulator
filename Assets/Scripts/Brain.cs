@@ -8,7 +8,7 @@ public class Brain : MonoBehaviour
     public GameObject eyes;
     private LayerMask ignore = 6;
 
-    private bool seeFeed;
+    private (bool left, bool forward, bool right) seeFeed;
     private bool canMove = false;
 
     public float feedsFound = 0;
@@ -20,29 +20,49 @@ public class Brain : MonoBehaviour
 
     private void Update()
     {
-        seeFeed = false;
-        canMove = true;
+        //seeFeed = (false, false, false);
+        //bool left = false;
+        //bool front = false;
+        //bool right = false;
+        //canMove = true;
 
-        RaycastHit hit;
-        Debug.DrawRay(eyes.transform.position, eyes.transform.forward * 1f, Color.red);
+        //RaycastHit hit;
+        //Debug.DrawRay(eyes.transform.position, eyes.transform.forward * 1f, Color.red);
 
-        if(Physics.SphereCast(eyes.transform.position, 0.1f, eyes.transform.forward, out hit, 1f, ~ignore))
-        {
-            if(hit.collider.gameObject.CompareTag("Feed"))
-            {
-                seeFeed = true;
-                canMove = false;
-            }
-        }
+        //if(Physics.SphereCast(eyes.transform.position, 0.1f, eyes.transform.forward, out hit, 1f, ~ignore))
+        //{
+        //    if(hit.collider.gameObject.CompareTag("Feed"))
+        //    {
+        //        front = true;
+        //        canMove = false;
+        //    }
+        //}
+
+        //if (Physics.SphereCast(eyes.transform.position, 0.1f, eyes.transform.right, out hit, 1f, ~ignore))
+        //{
+        //    if (hit.collider.gameObject.CompareTag("Feed"))
+        //    {
+        //        right = true;
+        //    }
+        //}
+
+        //if (Physics.SphereCast(eyes.transform.position, 0.1f, -eyes.transform.right, out hit, 1f, ~ignore))
+        //{
+        //    if (hit.collider.gameObject.CompareTag("Feed"))
+        //    {
+        //        left = true;
+        //    }
+        //}
+        //seeFeed = (left, front, right);
     }
 
     private void FixedUpdate()
     {
-        transform.Rotate(0, dna.genes[seeFeed], 0);
-        if(canMove)
-        {
-            transform.Translate(0f, 0f, 0.1f);
-        }
+        //transform.Rotate(0, dna.genes[seeFeed], 0);
+        //if(canMove)
+        //{
+        //    transform.Translate(0f, 0f, 0.1f);
+        //}
     }
 
     private void OnTriggerEnter(Collider other)

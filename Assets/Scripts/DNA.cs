@@ -4,29 +4,35 @@ using UnityEngine;
 
 public class DNA
 {
-    public Dictionary<bool, float> genes;
+    public Dictionary<(bool left, bool forward, bool right), float> genes;
 
     private int dnaLength;
 
     public DNA()
     {
-        genes = new Dictionary<bool, float>();
+        genes = new Dictionary<(bool left, bool forward, bool right), float>();
         SetRandom();
     }
 
     public void SetRandom()
     {
         genes.Clear();
-        genes.Add(false, Random.Range(-90, 91));
-        genes.Add(true, Random.Range(-90, 91));
+        genes.Add((false, false, false), Random.Range(-90, 91));
+        genes.Add((false, false, true), Random.Range(-90, 91));
+        genes.Add((false, true, true), Random.Range(-90, 91));
+        genes.Add((true, true, true), Random.Range(-90, 91));
+        genes.Add((true, false, false), Random.Range(-90, 91));
+        genes.Add((true, false, true), Random.Range(-90, 91));
+        genes.Add((false, true, false), Random.Range(-90, 91));
+        genes.Add((true, true, false), Random.Range(-90, 91));
         dnaLength = genes.Count;
     }
 
     public void Combine(DNA dna1, DNA dna2)
     {
         int i = 0;      // 첫번째 DNA, 두번째 DNA 교차 조합
-        Dictionary<bool, float> newGenes = new Dictionary<bool, float>();   // 새로운 유전자
-        foreach(KeyValuePair<bool, float> g in genes)
+        Dictionary<(bool left, bool forward, bool right), float> newGenes = new Dictionary<(bool left, bool forward, bool right), float>();   // 새로운 유전자
+        foreach(KeyValuePair<(bool left, bool forward, bool right), float> g in genes)
         {
             if(i < dnaLength / 2f)
             {   // dna 길이의 절반은 첫번째 DNA 계승
@@ -41,8 +47,8 @@ public class DNA
         genes = newGenes;
     }
 
-    public float GetGene(bool front)
+    public float GetGene((bool left, bool forward, bool right) seeFeed)
     {
-        return genes[front];
+        return genes[seeFeed];
     }
 }

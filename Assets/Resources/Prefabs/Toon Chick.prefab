@@ -522,6 +522,7 @@ GameObject:
   - component: {fileID: 4429102427960218}
   - component: {fileID: 95777776565643564}
   - component: {fileID: 2270309454872009495}
+  - component: {fileID: 4431889367201907006}
   m_Layer: 6
   m_Name: Toon Chick
   m_TagString: Untagged
@@ -583,6 +584,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   eyes: {fileID: 1347118198406993122}
+  feedsFound: 0
+--- !u!114 &4431889367201907006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1767663768970106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12f66aac0f8c5924b8eb63623e250fe5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DebugMode: 0
+  ViewAngle: 0
+  ViewRadius: 1
+  TargetMask:
+    serializedVersion: 2
+    m_Bits: 0
+  ObstacleMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &1878532393300130
 GameObject:
   m_ObjectHideFlags: 0
