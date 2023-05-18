@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Brain : MonoBehaviour
+public class Brain : CharacterBrain
 {
     public DNA dna;
     public GameObject eyes;
@@ -14,23 +14,57 @@ public class Brain : MonoBehaviour
 
     public float feedsFound = 0;
 
-    private void Start()
-    {
-        Init();
-    }
-
-    public void Init()
+    public override void Init()
     {
         dna = new DNA();
         fov = GetComponent<FieldOfView>();
     }
 
-    private void Update()
+    protected override void UpdateIdle()
     {
         if(fov != null && fov.FindClosetObject() != null)
         {
-            transform.LookAt(fov.FindClosetObject().transform);
+            targetObj = fov.FindClosetObject();
+            State = Define.CharacterState.Moving;
+            return;
         }
+    }
+
+    protected override void UpdateMoving()
+    {
+        if(targetObj != null)
+        {
+            destPos = targetObj.transform.position;
+            float distance = (destPos - transform.position).magnitude;
+            if(distance <= 0.13f)
+            {
+                if(targetObj.CompareTag("Feed"))
+                {
+                    Debug.Log("¿ì¸¶ÀÌ");
+                    State = Define.CharacterState.Eat;
+                    return;
+                }
+            }
+        }
+
+        Vector3 dir = destPos - transform.position;
+        dir.y = 0;
+        if (dir.magnitude < 0.1f) State = Define.CharacterState.Idle;
+        else
+        {
+            float moveDist = Mathf.Clamp(1f * Time.deltaTime, 0, dir.magnitude);
+            transform.position += dir.normalized * moveDist;
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), 20 * Time.deltaTime);
+        }
+    }
+
+
+    //private void Update()
+    //{
+        //if(fov != null && fov.FindClosetObject() != null)
+        //{
+        //    transform.LookAt(fov.FindClosetObject().transform);
+        //}
         //seeFeed = (false, false, false);
         //bool left = false;
         //bool front = false;
@@ -65,7 +99,7 @@ public class Brain : MonoBehaviour
         //    }
         //}
         //seeFeed = (left, front, right);
-    }
+    //}
 
     private void FixedUpdate()
     {
