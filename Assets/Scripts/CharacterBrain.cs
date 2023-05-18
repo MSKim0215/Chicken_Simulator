@@ -37,7 +37,7 @@ public abstract class CharacterBrain : MonoBehaviour
         {
             case Define.CharacterState.Idle: UpdateIdle(); break;
             case Define.CharacterState.Moving: UpdateMoving(); break;
-            case Define.CharacterState.Eat: UpdateAttack(); break;
+            case Define.CharacterState.Eat: UpdateEat(); break;
         }
     }
 
@@ -49,5 +49,5 @@ public abstract class CharacterBrain : MonoBehaviour
 
     protected virtual void UpdateMoving() { }
 
-    protected virtual void UpdateAttack() { }
+    protected virtual void UpdateEat() { }
 }

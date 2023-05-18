@@ -5,6 +5,7 @@ using UnityEngine;
 public class DNA
 {
     public Dictionary<(bool left, bool forward, bool right), float> genes;
+    public Stat stat { private set; get; }
 
     private int dnaLength;
 
@@ -13,6 +14,8 @@ public class DNA
         genes = new Dictionary<(bool left, bool forward, bool right), float>();
         SetRandom();
     }
+
+    public void SetStat(Stat stat) => this.stat = stat;
 
     public void SetRandom()
     {

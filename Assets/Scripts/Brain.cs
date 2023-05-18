@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class Brain : CharacterBrain
 {
@@ -17,6 +18,7 @@ public class Brain : CharacterBrain
     public override void Init()
     {
         dna = new DNA();
+        dna.SetStat(GetComponent<ChickenStat>());
         fov = GetComponent<FieldOfView>();
     }
 
@@ -36,11 +38,11 @@ public class Brain : CharacterBrain
         {
             destPos = targetObj.transform.position;
             float distance = (destPos - transform.position).magnitude;
-            if(distance <= 0.13f)
+            if(distance <= dna.stat.EatRange)
             {
                 if(targetObj.CompareTag("Feed"))
                 {
-                    Debug.Log("우마이");
+                    Debug.Log("이따다키마스");
                     State = Define.CharacterState.Eat;
                     return;
                 }
@@ -58,47 +60,63 @@ public class Brain : CharacterBrain
         }
     }
 
+    protected override void UpdateEat()
+    {
+        if(targetObj == null)
+        {
+            State = Define.CharacterState.Idle;
+            return;
+        }
+
+        if(targetObj != null)
+        {
+            Vector3 dir = targetObj.transform.position - transform.position;
+            Quaternion quat = Quaternion.LookRotation(dir);
+            transform.rotation = Quaternion.Lerp(transform.rotation, quat, 20f * Time.deltaTime);
+        }
+    }
+
 
     //private void Update()
     //{
-        //if(fov != null && fov.FindClosetObject() != null)
-        //{
-        //    transform.LookAt(fov.FindClosetObject().transform);
-        //}
-        //seeFeed = (false, false, false);
-        //bool left = false;
-        //bool front = false;
-        //bool right = false;
-        //canMove = true;
+    //if(fov != null && fov.FindClosetObject() != null)
+    //{
+    //    transform.LookAt(fov.FindClosetObject().transform);
+    //}
+    //seeFeed = (false, false, false);
+    //bool left = false;
+    //bool front = false;
+    //bool right = false;
+    //canMove = true;
 
-        //RaycastHit hit;
-        //Debug.DrawRay(eyes.transform.position, eyes.transform.forward * 1f, Color.red);
+    //RaycastHit hit;
+    //Debug.DrawRay(eyes.transform.position, eyes.transform.forward * 1f, Color.red);
 
-        //if(Physics.SphereCast(eyes.transform.position, 0.1f, eyes.transform.forward, out hit, 1f, ~ignore))
-        //{
-        //    if(hit.collider.gameObject.CompareTag("Feed"))
-        //    {
-        //        front = true;
-        //        canMove = false;
-        //    }
-        //}
+    //if(Physics.SphereCast(eyes.transform.position, 0.1f, eyes.transform.forward, out hit, 1f, ~ignore))
+    //{
+    //    if(hit.collider.gameObject.CompareTag("Feed"))
+    //    {
+    //        front = true;
+    //        canMove = false;
+    //    }
+    //}
 
-        //if (Physics.SphereCast(eyes.transform.position, 0.1f, eyes.transform.right, out hit, 1f, ~ignore))
-        //{
-        //    if (hit.collider.gameObject.CompareTag("Feed"))
-        //    {
-        //        right = true;
-        //    }
-        //}
+    //if (Physics.SphereCast(eyes.transform.position, 0.1f, eyes.transform.right, out hit, 1f, ~ignore))
+    //{
+    //    if (hit.collider.gameObject.CompareTag("Feed"))
+    //    {
+    //        right = true;
+    //    }
+    //}
 
-        //if (Physics.SphereCast(eyes.transform.position, 0.1f, -eyes.transform.right, out hit, 1f, ~ignore))
-        //{
-        //    if (hit.collider.gameObject.CompareTag("Feed"))
-        //    {
-        //        left = true;
-        //    }
-        //}
-        //seeFeed = (left, front, right);
+    //if (Physics.SphereCast(eyes.transform.position, 0.1f, -eyes.transform.right, out hit, 1f, ~ignore))
+    //{
+    //    if (hit.collider.gameObject.CompareTag("Feed"))
+    //    {
+    //        left = true;
+    //    }
+    //}
+    //seeFeed = (left, front, right);
     //}
 
     private void FixedUpdate()
@@ -110,12 +128,20 @@ public class Brain : CharacterBrain
         //}
     }
 
-    private void OnTriggerEnter(Collider other)
+    #region Event Callback
+    private void OnEatEvent()
     {
-        if(other.gameObject.CompareTag("Feed"))
+        Debug.Log("음 맛있다~");
+
+        if(targetObj != null)
         {
-            feedsFound++;
-            other.gameObject.SetActive(false);
+            if(targetObj.CompareTag("Feed"))
+            {
+                FeedStat feedStat = targetObj.GetComponent<FeedStat>();
+                feedStat.OnAttacked(dna.stat);
+            }
         }
+        State = Define.CharacterState.Eat;
     }
+    #endregion
 }
