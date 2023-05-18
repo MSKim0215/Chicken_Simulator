@@ -6,20 +6,31 @@ public class Brain : MonoBehaviour
 {
     public DNA dna;
     public GameObject eyes;
-    private LayerMask ignore = 6;
 
+    private FieldOfView fov;
+    private LayerMask ignore = 6;
     private (bool left, bool forward, bool right) seeFeed;
     private bool canMove = false;
 
     public float feedsFound = 0;
 
+    private void Start()
+    {
+        Init();
+    }
+
     public void Init()
     {
         dna = new DNA();
+        fov = GetComponent<FieldOfView>();
     }
 
     private void Update()
     {
+        if(fov != null && fov.FindClosetObject() != null)
+        {
+            transform.LookAt(fov.FindClosetObject().transform);
+        }
         //seeFeed = (false, false, false);
         //bool left = false;
         //bool front = false;
