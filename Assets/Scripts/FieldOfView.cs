@@ -1,12 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class FieldOfView : MonoBehaviour
 {
     [Header("시야각 옵션")]
-    [SerializeField] private bool DebugMode = false;
+    [SerializeField] private bool debugMode = true;
     [Range(0f, 360f)][SerializeField] private float ViewAngle = 0f;
     [SerializeField] private float ViewRadius = 1f;
     [SerializeField] private LayerMask TargetMask;
@@ -15,9 +14,11 @@ public class FieldOfView : MonoBehaviour
 
     private List<Collider> targetList = new List<Collider>();
 
+    public bool DebugMode { set => debugMode = value; }
+
     private void OnDrawGizmos()
     {
-        if (!DebugMode) return;
+        if (!debugMode) return;
 
         Vector3 myPos = transform.position + Vector3.up * height;
         Gizmos.DrawWireSphere(myPos, ViewRadius);
@@ -49,7 +50,7 @@ public class FieldOfView : MonoBehaviour
             if (targetAngle <= ViewAngle * 0.5f && !Physics.Raycast(myPos, targetDir, ViewRadius, ObstacleMask))
             {
                 targetList.Add(target);
-                if (DebugMode) Debug.DrawLine(myPos, closestPoint, Color.red);
+                if (debugMode) Debug.DrawLine(myPos, closestPoint, Color.red);
             }
         }
     }

@@ -29,6 +29,15 @@ public class Brain : CharacterBrain
             State = Define.CharacterState.Moving;
             return;
         }
+
+        if(Random.Range(0f, 1f) < 0.5f)
+        {
+            Vector3 randPos = transform.position + Random.insideUnitSphere;
+            randPos.y = transform.position.y;
+            destPos = randPos;
+            State = Define.CharacterState.Moving;
+            return;
+        }
     }
 
     protected override void UpdateMoving()
@@ -43,6 +52,7 @@ public class Brain : CharacterBrain
                 {
                     Debug.Log("이따다키마스");
                     State = Define.CharacterState.Eat;
+                    fov.DebugMode = false;
                     return;
                 }
             }
@@ -64,6 +74,7 @@ public class Brain : CharacterBrain
         if(targetObj == null)
         {
             State = Define.CharacterState.Idle;
+            fov.DebugMode = true;
             return;
         }
 
