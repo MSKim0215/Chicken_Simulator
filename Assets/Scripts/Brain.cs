@@ -30,10 +30,25 @@ public class Brain : CharacterBrain
             return;
         }
 
-        if(Random.Range(0f, 1f) < 0.5f)
+        if(Random.Range(0f, 1f) < 0.25f)
         {
-            Vector3 randPos = transform.position + Random.insideUnitSphere;
-            randPos.y = transform.position.y;
+            // TODO: 이동할 위치가 원 밖이면 반복
+            Vector3 randPos = transform.position + Random.insideUnitSphere * 1.5f;
+            randPos.y = 0f;
+
+            while (true)
+            {
+                Vector3 centerVec = randPos - Vector3.zero;
+                float centerDistance = centerVec.magnitude;
+                if (centerDistance > 5f)
+                {
+                    Debug.Log("밖으로 나감");
+                    randPos = transform.position + Random.insideUnitSphere * 1.5f;
+                    randPos.y = 0f;
+                }
+                else break;
+            }
+
             destPos = randPos;
             State = Define.CharacterState.Moving;
             return;
@@ -60,10 +75,11 @@ public class Brain : CharacterBrain
 
         Vector3 dir = destPos - transform.position;
         dir.y = 0;
+
         if (dir.magnitude < 0.1f) State = Define.CharacterState.Idle;
         else
         {
-            float moveDist = Mathf.Clamp(1f * Time.deltaTime, 0, dir.magnitude);
+            float moveDist = Mathf.Clamp(dna.stat.MoveSpeed * Time.deltaTime, 0, dir.magnitude);
             transform.position += dir.normalized * moveDist;
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), 20 * Time.deltaTime);
         }
