@@ -60,7 +60,7 @@ public class PopulationManager : MonoBehaviour
         else
         {
             brain.Init();
-            brain.dna.Combine(fother.GetComponent<Brain>().dna, mother.GetComponent<Brain>().dna);
+            brain.dna.CombineGenes(fother.GetComponent<Brain>().dna, mother.GetComponent<Brain>().dna);
         }
         return offsetSpring;
     }

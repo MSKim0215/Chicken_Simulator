@@ -1,39 +1,41 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum StatType
+{
+    Hp,
+    MoveSpeed,
+    AttackPower,
+    EatRange,
+    Defense
+}
+
 public class Stat : MonoBehaviour
 {
-    protected int hp;
+    protected Dictionary<StatType, object> stats = new Dictionary<StatType, object>();
     protected int hpMax;
-    protected float moveSpeed;
-    protected int attackPower;
-    protected float eatRange;
-    protected int defense;
 
-    public int Hp { get => hp; set => hp = value; }
+    public Dictionary<StatType, object> Stats { get => stats; set => stats = value; }
     public int HpMax { get => hpMax; set => hpMax = value; }
-    public float MoveSpeed { get => moveSpeed; set => moveSpeed = value; }
-    public int AttackPower { get => attackPower; set => attackPower = value; }
-    public float EatRange { get => eatRange; set => eatRange = value; }
-    public int Defense { get => defense; set => defense = value; }
 
     private void Start()
     {
-        hp = 5;
-        hpMax = hp;
-        moveSpeed = 1f;
-        attackPower = 1;
-        eatRange = 1f;
+        Stats.Add(StatType.Hp, 5);
+        Stats.Add(StatType.MoveSpeed, 1f);
+        Stats.Add(StatType.AttackPower, 1);
+        Stats.Add(StatType.EatRange, 1f);
+        Stats.Add(StatType.Defense, 1);
     }
 
     public virtual void OnAttacked(Stat attacker)
     {
-        int damage = Mathf.Max(0, attacker.attackPower - Defense);
-        Hp -= damage;
-        if (Hp <= 0)
+        int damage = Mathf.Max(0, (int)attacker.Stats[StatType.AttackPower] - (int)Stats[StatType.Defense]);
+        Stats[StatType.Hp] = (int)Stats[StatType.Hp] - damage;
+        if ((int)Stats[StatType.Hp] <= 0)
         {
-            Hp = 0;
+            Stats[StatType.Hp] = 0;
             Debug.Log("À¸¾Ó Á×À½");
             OnDead(attacker);
         }
