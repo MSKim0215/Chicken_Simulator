@@ -30,14 +30,13 @@ public class PopulationManager : MonoBehaviour
 
     private void Start()
     {
-        for(int i = 0; i < populationSize; i++)
-        {
-            int index = Random.Range(0, startingPos.Length);
-            GameObject bot = Instantiate(botPrefab, startingPos[index].transform.position, transform.rotation, transform);
-            bot.transform.Rotate(0, Mathf.Round(Random.Range(-90, 91) / 90) * 90, 0);
-            bot.GetComponent<Brain>().Init();
-            population.Add(bot);
-        }
+        //for(int i = 0; i < populationSize; i++)
+        //{
+        //    int index = Random.Range(0, startingPos.Length);
+        //    GameObject bot = Instantiate(botPrefab, startingPos[index].transform.position, transform.rotation, transform);
+        //    bot.transform.Rotate(0, Mathf.Round(Random.Range(-90, 91) / 90) * 90, 0);
+        //    population.Add(bot);
+        //}
         Time.timeScale = timeScale;
     }
 

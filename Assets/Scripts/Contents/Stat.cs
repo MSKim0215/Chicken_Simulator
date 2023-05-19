@@ -27,6 +27,8 @@ public class Stat : MonoBehaviour
         Stats.Add(StatType.AttackPower, 1);
         Stats.Add(StatType.EatRange, 1f);
         Stats.Add(StatType.Defense, 1);
+
+        HpMax = (int)Stats[StatType.Hp];
     }
 
     public virtual void OnAttacked(Stat attacker)

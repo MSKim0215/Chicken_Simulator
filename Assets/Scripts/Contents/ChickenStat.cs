@@ -4,15 +4,14 @@ using UnityEngine;
 
 public class ChickenStat : Stat
 {
-
-
     private void Start()
     {
-        hp = 5;
-        hpMax = hp;
-        moveSpeed = 1f;
-        attackPower = 1;
-        eatRange = 0.13f;
-        defense = 0;
+        Stats.Add(StatType.Hp, 5);
+        Stats.Add(StatType.MoveSpeed, 1f);
+        Stats.Add(StatType.AttackPower, 1);
+        Stats.Add(StatType.EatRange, 0.13f);
+        Stats.Add(StatType.Defense, 0);
+
+        HpMax = (int)Stats[StatType.Hp];
     }
 }

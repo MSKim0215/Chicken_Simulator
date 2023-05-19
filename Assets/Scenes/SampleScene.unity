@@ -394,6 +394,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05e204e01d4a08640a4c0894809bf3ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  beginPopulationSize: 50
+  trailTime: 30
+  timeScale: 2
   feedPrefab: {fileID: 8184166545873728843, guid: cf94849ae5b543a48bd2ae555b3ef726, type: 3}
   chickPrefab: {fileID: 1767663768970106, guid: ca9fda2f4d77c4d4f88d4ed8b939f69b, type: 3}
 --- !u!1 &963194225
@@ -908,7 +911,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2052075291}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b9594e5eaf6fb304a9a3bc18d37cb10a, type: 3}
   m_Name: 
@@ -920,7 +923,7 @@ MonoBehaviour:
   - {fileID: 1338038609}
   - {fileID: 262161499}
   populationSize: 30
-  trailTime: 10
+  trailTime: 20
   timeScale: 2
 --- !u!1001 &7116089125014251463
 PrefabInstance:

@@ -61,7 +61,7 @@ public class Brain : CharacterBrain
         {
             destPos = targetObj.transform.position;
             float distance = (destPos - transform.position).magnitude;
-            if(distance <= dna.stat.EatRange)
+            if(distance <= (float)dna.stat.Stats[StatType.EatRange])
             {
                 if(targetObj.CompareTag("Feed"))
                 {
@@ -79,7 +79,7 @@ public class Brain : CharacterBrain
         if (dir.magnitude < 0.1f) State = Define.CharacterState.Idle;
         else
         {
-            float moveDist = Mathf.Clamp(dna.stat.MoveSpeed * Time.deltaTime, 0, dir.magnitude);
+            float moveDist = Mathf.Clamp((float)dna.stat.Stats[StatType.MoveSpeed] * Time.deltaTime, 0, dir.magnitude);
             transform.position += dir.normalized * moveDist;
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), 20 * Time.deltaTime);
         }

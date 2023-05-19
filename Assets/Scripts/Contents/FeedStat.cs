@@ -6,10 +6,12 @@ public class FeedStat : Stat
 {
     private void Start()
     {
-        hp = 10;
-        hpMax = hp;
-        moveSpeed = 0f;
-        attackPower = 0;
-        eatRange = 0f;
+        Stats.Add(StatType.Hp, 10);
+        Stats.Add(StatType.MoveSpeed, 0f);
+        Stats.Add(StatType.AttackPower, 0);
+        Stats.Add(StatType.EatRange, 0f);
+        Stats.Add(StatType.Defense, 0);
+
+        HpMax = (int)Stats[StatType.Hp];
     }
 }
