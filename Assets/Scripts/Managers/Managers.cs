@@ -23,6 +23,7 @@ public class Managers : MonoBehaviour
     private SoundManager sound = new SoundManager();
     private PoolManager pool = new PoolManager();
     private DataManager data = new DataManager();
+    private InputManager input = new InputManager();
 
     public static ResourceManager Resource => Instance.resource;
     public static UIManager UI => Instance.ui;
@@ -30,6 +31,7 @@ public class Managers : MonoBehaviour
     public static SoundManager Sound => Instance.sound;
     public static PoolManager Pool => Instance.pool;
     public static DataManager Data => Instance.data;
+    public static InputManager Input => Instance.input;
     #endregion
 
     #region Contents
@@ -74,6 +76,7 @@ public class Managers : MonoBehaviour
 
     private void Update()
     {
+        Input.OnUpdate();
         Game.OnUpdate();
     }
 
