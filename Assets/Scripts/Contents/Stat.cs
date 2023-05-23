@@ -9,7 +9,11 @@ public enum StatType
     MoveSpeed,
     AttackPower,
     EatRange,
-    Defense
+    Defense,
+
+    // Chicken
+    ExpMax,
+    Level
 }
 
 public class Stat : MonoBehaviour
@@ -49,6 +53,7 @@ public class Stat : MonoBehaviour
         if(chickenStat != null)
         {
             chickenStat.GetComponent<Brain>().feedsFound++;
+            chickenStat.NowExp += 1;
         }
         Destroy(gameObject);
     }

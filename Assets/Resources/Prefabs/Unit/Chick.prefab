@@ -524,6 +524,7 @@ GameObject:
   - component: {fileID: 2270309454872009495}
   - component: {fileID: 4431889367201907006}
   - component: {fileID: 427252909}
+  - component: {fileID: -1703366399027618817}
   m_Layer: 6
   m_Name: Chick
   m_TagString: Chick
@@ -621,6 +622,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da6f33b7bba459c438df1fb35f2b027e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-1703366399027618817
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1767663768970106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 145ab7317b96b064a8f49477fc5730a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isUsing: 0
 --- !u!1 &1878532393300130
 GameObject:
   m_ObjectHideFlags: 0
