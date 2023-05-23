@@ -6,22 +6,55 @@ using UnityEngine;
 namespace Data
 {
     [Serializable]
-    public class Stat
+    public class ChickenStat
     {
-        public int level, maxHp, attack, totalExp;
+        public int Level, ExpMax, HpMax, AttackPower, Defense;
+        public float MoveSpeed, EatRange;
     }
 
     [Serializable]
-    public class StatData : ILoader<int, Stat>
+    public class ChickenStatData : ILoader<int, ChickenStat>
     {
-        public List<Stat> stats = new List<Stat>();
+        public List<ChickenStat> ChickenStats = new List<ChickenStat>();
 
-        public Dictionary<int, Stat> MakeDict()
+        public Dictionary<int, ChickenStat> MakeDict()
         {
-            Dictionary<int, Stat> data = new Dictionary<int, Stat>();
-            foreach (Stat stat in stats)
+            Dictionary<int, ChickenStat> data = new Dictionary<int, ChickenStat>();
+            foreach(ChickenStat stat in ChickenStats)
             {
-                data.Add(stat.level, stat);
+                data.Add(stat.Level, stat);
+            }
+            return data;
+        }
+    }
+
+    [Serializable]
+    public class ChickStatData : ILoader<int, ChickenStat>
+    {
+        public List<ChickenStat> ChickStats = new List<ChickenStat>();
+
+        public Dictionary<int, ChickenStat> MakeDict()
+        {
+            Dictionary<int, ChickenStat> data = new Dictionary<int, ChickenStat>();
+            foreach (ChickenStat stat in ChickStats)
+            {
+                data.Add(stat.Level, stat);
+            }
+            return data;
+        }
+    }
+
+    [Serializable]
+    public class EggStatData : ILoader<int, ChickenStat>
+    {
+        public List<ChickenStat> EggStats = new List<ChickenStat>();
+
+        public Dictionary<int, ChickenStat> MakeDict()
+        {
+            Dictionary<int, ChickenStat> data = new Dictionary<int, ChickenStat>();
+            foreach (ChickenStat stat in EggStats)
+            {
+                data.Add(stat.Level, stat);
             }
             return data;
         }

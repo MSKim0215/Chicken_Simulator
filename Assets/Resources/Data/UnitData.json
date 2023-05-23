@@ -1,0 +1,71 @@
+{
+  "ChickStats": [
+    {
+      "Level": "1",
+      "ExpMax": "2",
+      "HpMax": "5",
+      "MoveSpeed": "1f",
+      "AttackPower": "1",
+      "EatRange": "0.13f",
+      "Defense": "0"
+    },
+    {
+      "Level": "2",
+      "ExpMax": "8",
+      "HpMax": "7",
+      "MoveSpeed": "1f",
+      "AttackPower": "1",
+      "EatRange": "0.13f",
+      "Defense": "0"
+    },
+    {
+      "Level": "3",
+      "ExpMax": "14",
+      "HpMax": "9",
+      "MoveSpeed": "1f",
+      "AttackPower": "2",
+      "EatRange": "0.13f",
+      "Defense": "0"
+    },
+    {
+      "Level": "4",
+      "ExpMax": "22",
+      "HpMax": "11",
+      "MoveSpeed": "1f",
+      "AttackPower": "2",
+      "EatRange": "0.13f",
+      "Defense": "0"
+    },
+    {
+      "Level": "5",
+      "ExpMax": "30",
+      "HpMax": "13",
+      "MoveSpeed": "1f",
+      "AttackPower": "3",
+      "EatRange": "0.13f",
+      "Defense": "0"
+    }
+  ],
+  "ChickenStats": [
+    {
+      "Level": "1",
+      "ExpMax": "0",
+      "HpMax": "20",
+      "MoveSpeed": "1.2f",
+      "AttackPower": "5",
+      "EatRange": "0.15f",
+      "Defense": "1"
+    }
+  ],
+  "EggStats": [
+    {
+      "Level": "1",
+      "ExpMax": "0",
+      "HpMax": "5",
+      "MoveSpeed": "0f",
+      "AttackPower": "0",
+      "EatRange": "0",
+      "Defense": "3"
+    }
+  ]
+}
