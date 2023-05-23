@@ -19,6 +19,11 @@ public class Brain : CharacterBrain
         dna = new DNA();
         dna.SetStat(GetComponent<ChickenStat>(), Define.ChickenType.Chick);
         fov = GetComponent<FieldOfView>();
+
+        if(GetComponentInChildren<UI_Hpbar>() == null)
+        {
+            Managers.UI.MakeWordSpaceUI<UI_Hpbar>(transform);
+        }
     }
 
     protected override void UpdateIdle()

@@ -521,6 +521,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4429102427960218}
   - component: {fileID: 95777776565643564}
+  - component: {fileID: 6698761223265397430}
   - component: {fileID: 2270309454872009495}
   - component: {fileID: 4431889367201907006}
   - component: {fileID: 427252909}
@@ -573,6 +574,19 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!135 &6698761223265397430
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1767663768970106}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.15
+  m_Center: {x: 0, y: 0.15, z: 0}
 --- !u!114 &2270309454872009495
 MonoBehaviour:
   m_ObjectHideFlags: 0
