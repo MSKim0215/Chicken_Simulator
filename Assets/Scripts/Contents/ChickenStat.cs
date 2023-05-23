@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ChickenStat : Stat
 {
+    private Define.ChickenType type;
     private int nowExp;
     
     public int NowExp 
@@ -27,30 +28,26 @@ public class ChickenStat : Stat
             if(level != (int)Stats[StatType.Level])
             {
                 Debug.Log("·¹º§ »ó½Â");
-                Stats[StatType.Level] = level;
-                SetStat((int)Stats[StatType.Level]);
+                Init(type, level);
             }
         }
     }
 
-    private void Start()
+    public override void Init(Define.ChickenType type = Define.ChickenType.None, int level = 1)
     {
-        Stats.Add(StatType.Hp, 5);
-        Stats.Add(StatType.MoveSpeed, 1f);
-        Stats.Add(StatType.AttackPower, 1);
-        Stats.Add(StatType.EatRange, 0.13f);
-        Stats.Add(StatType.Defense, 0);
+        this.type = type;
+
+        if (Stats.Count > 0) Stats.Clear();
+
+        Stats.Add(StatType.Level, Managers.Data.ChickStatDict[level].Level);
+
+        Stats.Add(StatType.Hp, Managers.Data.ChickStatDict[level].HpMax);
+        Stats.Add(StatType.MoveSpeed, Managers.Data.ChickStatDict[level].MoveSpeed);
+        Stats.Add(StatType.AttackPower, Managers.Data.ChickStatDict[level].AttackPower);
+        Stats.Add(StatType.EatRange, Managers.Data.ChickStatDict[level].EatRange);
+        Stats.Add(StatType.Defense, Managers.Data.ChickStatDict[level].Defense);
 
         HpMax = (int)Stats[StatType.Hp];
-
-        Stats.Add(StatType.Level, 1);
         NowExp = 0;
-        Stats.Add(StatType.ExpMax, 1);
-    }
-
-    public void SetStat(int level)
-    {
-        Dictionary<int, Data.ChickenStat> datas = new Dictionary<int, Data.ChickenStat>();
-        Data.ChickenStat stat = datas[level];
     }
 }

@@ -53,4 +53,9 @@ public class Define
     {
         Idle, Moving, Eat
     }
+
+    public enum ChickenType
+    {
+        None, Egg, Chick, Chicken
+    }
 }

@@ -24,7 +24,7 @@ public class Stat : MonoBehaviour
     public Dictionary<StatType, object> Stats { get => stats; set => stats = value; }
     public int HpMax { get => hpMax; set => hpMax = value; }
 
-    private void Start()
+    public virtual void Init(Define.ChickenType type = Define.ChickenType.None, int level = 1)
     {
         Stats.Add(StatType.Hp, 5);
         Stats.Add(StatType.MoveSpeed, 1f);

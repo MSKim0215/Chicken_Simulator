@@ -2,7 +2,7 @@
   "ChickStats": [
     {
       "Level": "1",
-      "ExpMax": "2",
+      "ExpMax": "0",
       "HpMax": "5",
       "MoveSpeed": "1f",
       "AttackPower": "1",
@@ -11,7 +11,7 @@
     },
     {
       "Level": "2",
-      "ExpMax": "8",
+      "ExpMax": "2",
       "HpMax": "7",
       "MoveSpeed": "1f",
       "AttackPower": "1",
@@ -20,7 +20,7 @@
     },
     {
       "Level": "3",
-      "ExpMax": "14",
+      "ExpMax": "8",
       "HpMax": "9",
       "MoveSpeed": "1f",
       "AttackPower": "2",
@@ -29,7 +29,7 @@
     },
     {
       "Level": "4",
-      "ExpMax": "22",
+      "ExpMax": "14",
       "HpMax": "11",
       "MoveSpeed": "1f",
       "AttackPower": "2",
@@ -38,7 +38,7 @@
     },
     {
       "Level": "5",
-      "ExpMax": "30",
+      "ExpMax": "22",
       "HpMax": "13",
       "MoveSpeed": "1f",
       "AttackPower": "3",

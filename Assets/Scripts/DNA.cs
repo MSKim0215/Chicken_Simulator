@@ -24,7 +24,11 @@ public class DNA
         SetRandom();
     }
 
-    public void SetStat(Stat stat) => this.stat = stat;
+    public void SetStat(Stat stat, Define.ChickenType type)
+    {
+        this.stat = stat;
+        stat.Init(type);
+    }
 
     public void SetRandom()
     {
