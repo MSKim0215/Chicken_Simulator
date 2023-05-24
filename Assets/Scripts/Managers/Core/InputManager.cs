@@ -16,7 +16,12 @@ public class InputManager
             RaycastHit hit;
             if(Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("Unit")))
             {
-                Debug.Log(hit.collider.name);
+                UI_UnitInfo info = Managers.UI.ShowPopupUI<UI_UnitInfo>();
+                info.SetTarget(hit.collider.GetComponent<Brain>());
+            }
+            else
+            {
+                Managers.UI.ClosePopupUI();
             }
         }
     }

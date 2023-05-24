@@ -83,4 +83,5 @@ public abstract class UI_Base : MonoBehaviour
     protected Text GetText(int _index) => Get<Text>(_index);
     protected Image GetImage(int _index) => Get<Image>(_index);
     protected Button GetButton(int _index) => Get<Button>(_index);
+    protected Slider GetSlider(int _index) => Get<Slider>(_index);
 }

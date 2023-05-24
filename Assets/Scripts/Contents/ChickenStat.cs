@@ -40,6 +40,7 @@ public class ChickenStat : Stat
         if (Stats.Count > 0) Stats.Clear();
 
         Stats.Add(StatType.Level, Managers.Data.ChickStatDict[level].Level);
+        Stats.Add(StatType.ExpMax, Managers.Data.ChickStatDict[level].ExpMax);
 
         Stats.Add(StatType.Hp, Managers.Data.ChickStatDict[level].HpMax);
         Stats.Add(StatType.MoveSpeed, Managers.Data.ChickStatDict[level].MoveSpeed);

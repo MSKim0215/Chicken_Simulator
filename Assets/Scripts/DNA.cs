@@ -18,6 +18,8 @@ public class DNA
 
     private int dnaLength;
 
+    public bool isMutant = false;
+
     public DNA()
     {
         genes = new Dictionary<DNAType, float>();
