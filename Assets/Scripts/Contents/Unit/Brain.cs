@@ -17,7 +17,7 @@ public class Brain : CharacterBrain
     public override void Init()
     {
         dna = new DNA();
-        dna.SetStat(GetComponent<ChickenStat>(), Define.ChickenType.Chick);
+        dna.SetStat(GetComponent<ChickenStat>(), Define.ChickenType.Chicken);
         fov = GetComponent<FieldOfView>();
 
         if(GetComponentInChildren<UI_Hpbar>() == null)

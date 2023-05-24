@@ -111,6 +111,23 @@ public class GameManager
         return chick;
     }
 
+    public void SpawnChicken(int count)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            GameObject chicken = SpawnChicken();
+            CurrGeneraionList.Add(chicken);
+        }
+    }
+
+    private GameObject SpawnChicken()
+    {
+        GameObject chicken = Managers.Resource.Instantiate("Unit/Chicken");
+        chicken.transform.position = RandomSpawnPoint();
+        chicken.transform.rotation = RandomSpawnRotate();
+        return chicken;
+    }
+
     public void OnUpdate()
     {
         //elapsed += Time.deltaTime;

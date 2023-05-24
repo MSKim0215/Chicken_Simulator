@@ -25,11 +25,15 @@ public class DNA
     public void SetStat(Stat stat, Define.ChickenType type)
     {
         this.stat = stat;
-        stat.Init(type);
+        this.stat.Init(type);
 
         if(type == Define.ChickenType.Chick)
         {
             WorldObjectType = Define.WorldObject.Chick;
+        }
+        else
+        {
+            WorldObjectType = Define.WorldObject.Chicken;
         }
     }
 

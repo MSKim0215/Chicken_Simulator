@@ -20,8 +20,16 @@ public class ChickenStat : Stat
 
             while(true)
             {
-                if (!Managers.Data.ChickStatDict.TryGetValue(level + 1, out stat)) break;
-                if (nowExp < stat.ExpMax) break;
+                if(type == Define.ChickenType.Chick)
+                {
+                    if (!Managers.Data.ChickStatDict.TryGetValue(level + 1, out stat)) break;
+                    if (nowExp < stat.ExpMax) break;
+                }
+                else if(type == Define.ChickenType.Chicken)
+                {
+                    if(!Managers.Data.ChickenStatDict.TryGetValue(level + 1, out stat)) break;
+                    if (nowExp < stat.ExpMax) break;
+                }
                 level++;
             }
 
@@ -38,6 +46,18 @@ public class ChickenStat : Stat
 
         if (Stats.Count > 0) Stats.Clear();
 
+        switch(this.type)
+        {
+            case Define.ChickenType.Chick: SetChickStat(level); break;
+            case Define.ChickenType.Chicken: SetChickenStat(level); break;
+        }
+
+        HpMax = (int)Stats[StatType.Hp];
+        NowExp = 0;
+    }
+
+    private void SetChickStat(int level)
+    {
         Stats.Add(StatType.Level, Managers.Data.ChickStatDict[level].Level);
         Stats.Add(StatType.ExpMax, Managers.Data.ChickStatDict[level].ExpMax);
 
@@ -46,8 +66,17 @@ public class ChickenStat : Stat
         Stats.Add(StatType.AttackPower, Managers.Data.ChickStatDict[level].AttackPower);
         Stats.Add(StatType.EatRange, Managers.Data.ChickStatDict[level].EatRange);
         Stats.Add(StatType.Defense, Managers.Data.ChickStatDict[level].Defense);
+    }
 
-        HpMax = (int)Stats[StatType.Hp];
-        NowExp = 0;
+    private void SetChickenStat(int level)
+    {
+        Stats.Add(StatType.Level, Managers.Data.ChickenStatDict[level].Level);
+        Stats.Add(StatType.ExpMax, Managers.Data.ChickenStatDict[level].ExpMax);
+
+        Stats.Add(StatType.Hp, Managers.Data.ChickenStatDict[level].HpMax);
+        Stats.Add(StatType.MoveSpeed, Managers.Data.ChickenStatDict[level].MoveSpeed);
+        Stats.Add(StatType.AttackPower, Managers.Data.ChickenStatDict[level].AttackPower);
+        Stats.Add(StatType.EatRange, Managers.Data.ChickenStatDict[level].EatRange);
+        Stats.Add(StatType.Defense, Managers.Data.ChickenStatDict[level].Defense);
     }
 }

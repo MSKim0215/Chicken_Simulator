@@ -26,7 +26,7 @@ public class GameScene : BaseScene
         //Managers.UI.ShowSceneUI<UI_Joystick>();
         //Managers.UI.ShowSceneUI<UI_AttackButton>().SetPlayer(player);
 
-        Managers.Game.SpawnChick(Managers.Game.BeginPopulationSize);
+        Managers.Game.SpawnChicken(Managers.Game.BeginPopulationSize);
 
         GameObject spawner = GameObject.Find("FeedSpawner");
         if (spawner == null)
