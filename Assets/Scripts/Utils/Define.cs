@@ -41,7 +41,7 @@ public class Define
 
     public enum WorldObject
     {
-        Unknown, Player, Monster
+        Unknown, Egg, Chick, Chicken, Fox, Feed
     }
 
     public enum MonsterType

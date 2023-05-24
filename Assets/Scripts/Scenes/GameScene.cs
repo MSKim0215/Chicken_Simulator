@@ -27,7 +27,10 @@ public class GameScene : BaseScene
         //Managers.UI.ShowSceneUI<UI_AttackButton>().SetPlayer(player);
 
         Managers.Game.SpawnChick(Managers.Game.BeginPopulationSize);
-        Managers.Game.SpawnFeed();
+
+        GameObject feedSpawningPool = new GameObject { name = "SpawningPool" };
+        SpawnManager pool = feedSpawningPool.GetOrAddComponent<SpawnManager>();
+        pool.SetKeepFeedCount(15);
     }
 
     public override void Clear()

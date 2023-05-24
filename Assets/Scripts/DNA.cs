@@ -20,6 +20,8 @@ public class DNA
 
     public bool isMutant = false;
 
+    public Define.WorldObject WorldObjectType { get; private set; } = Define.WorldObject.Unknown;
+    
     public DNA()
     {
         genes = new Dictionary<DNAType, float>();
@@ -30,6 +32,11 @@ public class DNA
     {
         this.stat = stat;
         stat.Init(type);
+
+        if(type == Define.ChickenType.Chick)
+        {
+            WorldObjectType = Define.WorldObject.Chick;
+        }
     }
 
     public void SetRandom()

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,8 +16,11 @@ public class GameManager
     public int Generation { private set; get; } = 1;     // 세대
     public int BeginPopulationSize => beginPopulationSize;
 
-    // 돌연변이, 일반 병아리 머티리얼
-    private Dictionary<bool, Material> chickMaterials = new Dictionary<bool, Material>();
+    private HashSet<GameObject> chicks = new HashSet<GameObject>();     // 병아리 집합
+    private HashSet<GameObject> feeds = new HashSet<GameObject>();      // 먹이 집합
+    private Dictionary<bool, Material> chickMaterials = new Dictionary<bool, Material>();   // 돌연변이, 일반 병아리 머티리얼
+
+    public Action<int> OnSpawnEvent;
 
     public void Init()
     {
@@ -26,6 +30,71 @@ public class GameManager
 
         chickMaterials.Add(true, Managers.Resource.Load<Material>("Materials/Mutant Chick"));
         chickMaterials.Add(false, Managers.Resource.Load<Material>("Materials/Normal Chick"));
+    }
+
+    public GameObject Spawn(Define.WorldObject type, string path, Transform parent = null)
+    {
+        GameObject prefab = Managers.Resource.Instantiate(path, parent);
+        prefab.transform.position = RandomSpawnPoint();
+        prefab.transform.rotation = RandomSpawnRotate();
+
+        switch (type)
+        {
+            case Define.WorldObject.Chick:
+                {
+                    chicks.Add(prefab);
+                    OnSpawnEvent?.Invoke(1);
+                }
+                break;
+            case Define.WorldObject.Feed:
+                {
+                    prefab.transform.position = new Vector3(prefab.transform.position.x, 0.05f, prefab.transform.position.z);
+                    feeds.Add(prefab);
+                    OnSpawnEvent?.Invoke(1);
+                }
+                break;
+        }
+        return prefab;
+    }
+
+    private Define.WorldObject GetWorldObjectType(GameObject target)
+    {
+        Brain brain = target.GetComponent<Brain>();
+        if (brain == null) return Define.WorldObject.Unknown;
+        return brain.dna.WorldObjectType;
+    }
+
+    public void Despawn(GameObject target)
+    {
+        switch(GetWorldObjectType(target))
+        {
+            case Define.WorldObject.Chick:
+                {
+                    if (chicks.Contains(target))
+                    {
+                        chicks.Remove(target);
+                        OnSpawnEvent?.Invoke(-1);
+                    }
+                }
+                break;
+            case Define.WorldObject.Feed:
+                {
+                    if (feeds.Contains(target))
+                    {
+                        feeds.Remove(target);
+                        OnSpawnEvent?.Invoke(-1);
+                    }
+                }
+                break;
+        }
+
+        if (feeds.Contains(target))
+        {
+            feeds.Remove(target);
+            OnSpawnEvent?.Invoke(-1);
+        }
+
+        Managers.Resource.Destroy(target);
     }
 
     public void SpawnChick(int count)
@@ -45,27 +114,33 @@ public class GameManager
         return chick;
     }
 
-    public void SpawnFeed()
+    public void SpawnFeed(int count)
     {
-        for (int i = 0; i < beginPopulationSize; i++)
+        for (int i = 0; i < count; i++)
         {
-            GameObject feed = Managers.Resource.Instantiate("Unit/Feed");
-            feed.transform.position = RandomSpawnPoint();
-            feed.transform.position = new Vector3(feed.transform.position.x, 0.05f, feed.transform.position.z);
-            feed.transform.rotation = RandomSpawnRotate();
+            GameObject feed = SpawnFeed();
         }
+    }
+
+    private GameObject SpawnFeed()
+    {
+        GameObject feed = Managers.Resource.Instantiate("Unit/Feed");
+        feed.transform.position = RandomSpawnPoint();
+        feed.transform.position = new Vector3(feed.transform.position.x, 0.05f, feed.transform.position.z);
+        feed.transform.rotation = RandomSpawnRotate();
+        return feed;
     }
 
     public void OnUpdate()
     {
-        elapsed += Time.deltaTime;
-        if (elapsed >= trailTime)
-        {
-            Debug.Log("끝남요");
-            BreedNewPopulation();
-            elapsed = 0;
-            SpawnFeed();
-        }
+        //elapsed += Time.deltaTime;
+        //if (elapsed >= trailTime)
+        //{
+        //    Debug.Log("끝남요");
+        //    BreedNewPopulation();
+        //    elapsed = 0;
+        //    SpawnFeed();
+        //}
     }
 
     /// <summary>
@@ -79,7 +154,7 @@ public class GameManager
         Brain brain = offsetSpring.GetComponent<Brain>();
         brain.Init();
 
-        if (Random.Range(0, 100) < 30)
+        if (UnityEngine.Random.Range(0, 100) < 30)
         {   // 돌연변이 발현, 1% 확률
             brain.dna.isMutant = true;
 
@@ -147,14 +222,14 @@ public class GameManager
 
     private Vector3 RandomSpawnPoint()
     {
-        Vector3 randRespawnVec = Random.insideUnitSphere * 5f;
+        Vector3 randRespawnVec = UnityEngine.Random.insideUnitSphere * 5f;
         randRespawnVec.y = 0;
         return randRespawnVec;
     }
 
     private Quaternion RandomSpawnRotate()
     {
-        return Quaternion.Euler(0, Random.Range(0, 360f), 0); 
+        return Quaternion.Euler(0, UnityEngine.Random.Range(0, 360f), 0); 
     }
 
     private void OnDrawGizmos()

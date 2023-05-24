@@ -55,6 +55,6 @@ public class Stat : MonoBehaviour
             chickenStat.GetComponent<Brain>().feedsFound++;
             chickenStat.NowExp += 1;
         }
-        Destroy(gameObject);
+        Managers.Game.Despawn(gameObject);
     }
 }
