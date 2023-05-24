@@ -11,7 +11,7 @@ public enum DNAType
     SafeFound       // 안전 구역 탐색 가중치
 }
 
-public class RootDNA : MonoBehaviour
+public class RootDNA 
 {
     protected int dnaCodeLength;        // 유전자 코드 길이
 
@@ -28,14 +28,9 @@ public class RootDNA : MonoBehaviour
     protected virtual void SetRandomGenesCode()
     {
         GenesCode.Clear();
-        //GenesCode.Add(DNAType.Avoidance, 1f);
-        //GenesCode.Add(DNAType.Cohesion, 1f);
-        //GenesCode.Add(DNAType.FeedFound, 1f);
-        //GenesCode.Add(DNAType.SafeFound, 1f);
-        //dnaCodeLength = GenesCode.Count;
     }
 
-    public void CombineGenes(DNA dna1, DNA dna2)
+    public void CombineGenes(ChickensDNA dna1, ChickensDNA dna2)
     {
         int i = 0;      // 첫번째 DNA, 두번째 DNA 교차 조합
         Dictionary<DNAType, float> newGenes = new Dictionary<DNAType, float>();   // 새로운 유전자
@@ -43,18 +38,18 @@ public class RootDNA : MonoBehaviour
         {
             if (i < dnaCodeLength / 2)
             {   // dna 길이의 절반은 첫번째 DNA 계승
-                newGenes.Add(g.Key, dna1.genes[g.Key]);
+                newGenes.Add(g.Key, dna1.GenesCode[g.Key]);
             }
             else
             {   // 이후 모든 절반은 두번째 DNA 계승
-                newGenes.Add(g.Key, dna2.genes[g.Key]);
+                newGenes.Add(g.Key, dna2.GenesCode[g.Key]);
             }
             i++;
         }
         GenesCode = newGenes;
     }
 
-    public void CombineStat(DNA dna1, DNA dna2)
+    public void CombineStat(ChickensDNA dna1, ChickensDNA dna2)
     {
         Stat newStat = new Stat();      // 새로운 스탯
         for (int i = 0; i < Enum.GetValues(typeof(StatType)).Length; i++)
@@ -65,14 +60,14 @@ public class RootDNA : MonoBehaviour
             {   // 50% 확률로 첫번째 스탯 중 하나 계승 (중복 스탯x)
                 if (!newStat.Stats.ContainsKey(statType))
                 {
-                    newStat.Stats.Add(statType, dna1.stat.Stats[statType]);
+                    newStat.Stats.Add(statType, dna1.StatusCode.Stats[statType]);
                 }
             }
             else
             {   // 50% 확률로 두번째 스탯 중 하나 계승 (중복 스탯x)
                 if (!newStat.Stats.ContainsKey(statType))
                 {
-                    newStat.Stats.Add(statType, dna2.stat.Stats[statType]);
+                    newStat.Stats.Add(statType, dna2.StatusCode.Stats[statType]);
                 }
             }
         }

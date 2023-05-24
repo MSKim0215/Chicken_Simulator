@@ -1,33 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class Brain : CharacterBrain
+public class ChickensBrain : CharacterBrain
 {
-    public DNA dna;
-    public GameObject eyes;
+    private FieldOfView sight;          // 시야각
 
-    private FieldOfView fov;
-    private LayerMask ignore = 6;
-    private (bool left, bool forward, bool right) seeFeed;
-    private bool canMove = false;
+    public int feedsFound = 0;
 
-    public float feedsFound = 0;
+    public ChickensDNA DNA { private set; get; }        // 유전자 DNA
+
 
     public override void Init()
     {
-        dna = new DNA();
+        sight = GetComponent<FieldOfView>();
 
-        if(tag == "Chick")
+        DNA = new ChickensDNA();
+        switch(DNA.WorldObjectType)
         {
-            dna.SetStat(GetComponent<ChickenStat>(), Define.ChickenType.Chick);
+            case Define.WorldObject.Chick: DNA.SetStatus(GetComponent<ChickenStat>(), Define.ChickenType.Chick); break;
+            case Define.WorldObject.Chicken: DNA.SetStatus(GetComponent<ChickenStat>(), Define.ChickenType.Chicken); break;
         }
-        else if(tag == "Chicken")
-        {
-            dna.SetStat(GetComponent<ChickenStat>(), Define.ChickenType.Chicken);
-        }
-
-        fov = GetComponent<FieldOfView>();
 
         if(GetComponentInChildren<UI_Hpbar>() == null)
         {
@@ -37,14 +31,14 @@ public class Brain : CharacterBrain
 
     protected override void UpdateIdle()
     {
-        if(fov != null && fov.FindClosetObject() != null)
+        if (sight != null && sight.FindClosetObject() != null)
         {
-            targetObj = fov.FindClosetObject();
+            targetObj = sight.FindClosetObject();
             State = Define.CharacterState.Moving;
             return;
         }
 
-        if(Random.Range(0f, 1f) < 0.25f)
+        if (Random.Range(0f, 1f) < 0.25f)
         {
             // TODO: 이동할 위치가 원 밖이면 반복
             Vector3 randPos = transform.position + Random.insideUnitSphere * 1.5f;
@@ -70,16 +64,16 @@ public class Brain : CharacterBrain
 
     protected override void UpdateMoving()
     {
-        if(targetObj != null)
+        if (targetObj != null)
         {
             destPos = targetObj.transform.position;
             float distance = (destPos - transform.position).magnitude;
-            if(distance <= (float)dna.stat.Stats[StatType.EatRange])
+            if (distance <= (float)DNA.StatusCode.Stats[StatType.EatRange])
             {
-                if(targetObj.CompareTag("Feed"))
+                if (targetObj.CompareTag("Feed"))
                 {
                     State = Define.CharacterState.Eat;
-                    fov.DebugMode = false;
+                    sight.DebugMode = false;
                     return;
                 }
             }
@@ -91,7 +85,7 @@ public class Brain : CharacterBrain
         if (dir.magnitude < 0.1f) State = Define.CharacterState.Idle;
         else
         {
-            float moveDist = Mathf.Clamp((float)dna.stat.Stats[StatType.MoveSpeed] * Time.deltaTime, 0, dir.magnitude);
+            float moveDist = Mathf.Clamp((float)DNA.StatusCode.Stats[StatType.MoveSpeed] * Time.deltaTime, 0, dir.magnitude);
             transform.position += dir.normalized * moveDist;
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), 20 * Time.deltaTime);
         }
@@ -99,14 +93,14 @@ public class Brain : CharacterBrain
 
     protected override void UpdateEat()
     {
-        if(targetObj == null)
+        if (targetObj == null)
         {
             State = Define.CharacterState.Idle;
-            fov.DebugMode = true;
+            sight.DebugMode = true;
             return;
         }
 
-        if(targetObj != null)
+        if (targetObj != null)
         {
             Vector3 dir = targetObj.transform.position - transform.position;
             Quaternion quat = Quaternion.LookRotation(dir);
@@ -169,12 +163,12 @@ public class Brain : CharacterBrain
     #region Event Callback
     private void OnEatEvent()
     {
-        if(targetObj != null)
+        if (targetObj != null)
         {
-            if(targetObj.CompareTag("Feed"))
+            if (targetObj.CompareTag("Feed"))
             {
                 FeedStat feedStat = targetObj.GetComponent<FeedStat>();
-                feedStat.OnAttacked(dna.stat);
+                feedStat.OnAttacked(DNA.StatusCode);
             }
         }
         State = Define.CharacterState.Eat;

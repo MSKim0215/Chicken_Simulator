@@ -32,7 +32,6 @@ public class ChickenStat : Stat
                     if (nowExp < nextStat.ExpMax) break;
                 }
                 level++;
-                Debug.Log("레벨 상승! 현재: " + level);
             }
 
             if(level != (int)Stats[StatType.Level])

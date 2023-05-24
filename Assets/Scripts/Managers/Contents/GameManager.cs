@@ -105,9 +105,15 @@ public class GameManager
 
     private Define.WorldObject GetWorldObjectType(GameObject target)
     {
-        RootDNA root = target.GetComponent<RootDNA>();
-        if (root == null) return Define.WorldObject.Unknown;
-        return root.WorldObjectType;
+        if(target.tag == "Feed")
+        {
+            return target.GetComponent<FeedBrain>().DNA.WorldObjectType;
+        }
+        else if(target.tag == "Chick" || target.tag == "Chicken")
+        {
+            return target.GetComponent<ChickensBrain>().DNA.WorldObjectType;
+        }
+        return Define.WorldObject.Unknown;
     }
 
     public void Despawn(GameObject target, int despawnCount = -1)
@@ -239,27 +245,27 @@ public class GameManager
     private GameObject Breed(GameObject fother, GameObject mother)
     {
         GameObject offsetSpring = GetOffset(fother.tag);
-        Brain brain = offsetSpring.GetComponent<Brain>();
+        ChickensBrain brain = offsetSpring.GetComponent<ChickensBrain>();
         brain.Init();
 
         if (UnityEngine.Random.Range(0, 100) < 30)
         {   // 돌연변이 발현, 1% 확률
-            brain.dna.isMutant = true;
+            brain.DNA.isMutant = true;
 
             SkinnedMeshRenderer skin;
 
-            if(brain.dna.WorldObjectType == Define.WorldObject.Chick)
+            if(brain.DNA.WorldObjectType == Define.WorldObject.Chick)
             {
                 skin = offsetSpring.transform.Find("Toon Chick").GetComponent<SkinnedMeshRenderer>();
                 Material[] mats = skin.materials;
-                mats[0] = chickMaterials[brain.dna.isMutant];
+                mats[0] = chickMaterials[brain.DNA.isMutant];
                 skin.materials = mats;
             }
-            else if(brain.dna.WorldObjectType == Define.WorldObject.Chicken)
+            else if(brain.DNA.WorldObjectType == Define.WorldObject.Chicken)
             {
                 skin = offsetSpring.transform.Find("Toon Chicken").GetComponent<SkinnedMeshRenderer>();
                 Material[] mats = skin.materials;
-                mats[0] = chickenMaterials[brain.dna.isMutant];
+                mats[0] = chickenMaterials[brain.DNA.isMutant];
                 skin.materials = mats;
             }
             
@@ -267,7 +273,7 @@ public class GameManager
         }
         else
         {
-            brain.dna.CombineGenes(fother.GetComponent<Brain>().dna, mother.GetComponent<Brain>().dna);
+            brain.DNA.CombineGenes(fother.GetComponent<ChickensBrain>().DNA, mother.GetComponent<ChickensBrain>().DNA);
         }
         return offsetSpring;
     }
@@ -288,12 +294,12 @@ public class GameManager
     public void BreedNewPopulation()
     {
         // 먹이를 가장 많이 먹은 개체 위주로 번식 시킴
-        List<GameObject> sortedList = CurrGeneraionList.OrderByDescending(o => o.GetComponent<Brain>().feedsFound).ToList();
+        List<GameObject> sortedList = CurrGeneraionList.OrderByDescending(o => o.GetComponent<ChickensBrain>().feedsFound).ToList();
         string feedCollected = $"Generation: {Generation}";
-        foreach (GameObject g in sortedList)
-        {
-            feedCollected += $", {g.GetComponent<Brain>().feedsFound}";
-        }
+        //foreach (GameObject g in sortedList)
+        //{
+        //    feedCollected += $", {g.GetComponent<ChickensBrain>().feedsFound}";
+        //}
         Debug.Log("Feeds: " + feedCollected);
         CurrGeneraionList.Clear();     // 기존 세대 제거
 

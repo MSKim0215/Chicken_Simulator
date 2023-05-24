@@ -16,6 +16,8 @@ public abstract class CharacterBrain : MonoBehaviour
         set
         {
             Animator anim = GetComponent<Animator>();
+            if (anim == null) return;
+
             state = value;
             switch(state)
             {

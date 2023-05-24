@@ -51,7 +51,7 @@ public class Stat : MonoBehaviour
         ChickenStat chickenStat = attacker as ChickenStat;
         if(chickenStat != null)
         {
-            Brain brain = chickenStat.GetComponent<Brain>();
+            ChickensBrain brain = chickenStat.GetComponent<ChickensBrain>();
             brain.feedsFound++;
             brain.targetObj = null;
             chickenStat.NowExp += 1;

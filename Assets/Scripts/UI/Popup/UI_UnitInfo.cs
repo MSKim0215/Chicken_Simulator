@@ -24,9 +24,9 @@ public class UI_UnitInfo : UI_Popup
         Slider_Expbar
     }
 
-    private Brain target;
+    private ChickensBrain target;
 
-    public void SetTarget(Brain target) => this.target = target;
+    public void SetTarget(ChickensBrain target) => this.target = target;
 
     public override void Init()
     {
@@ -43,7 +43,7 @@ public class UI_UnitInfo : UI_Popup
     {
         if (target == null) return;
 
-        float hpRatio = (int)target.dna.stat.Stats[StatType.Hp] / (float)target.dna.stat.HpMax;
+        float hpRatio = (int)target.DNA.StatusCode.Stats[StatType.Hp] / (float)target.DNA.StatusCode.HpMax;
         SetHpRatio(hpRatio);
 
         //Data.ChickenStat next = target.dna.stat.GetComponent<Data.ChickenStat>();
@@ -53,21 +53,21 @@ public class UI_UnitInfo : UI_Popup
 
     private void RefreshUI()
     {
-        GetText((int)Texts.Text_Name).text = target.dna.stat.gameObject.tag;
-        GetText((int)Texts.Text_Level).text = $"Lv.{target.dna.stat.Stats[StatType.Level]}";
-        GetObject((int)GameObjects.Img_Mutant).SetActive(target.dna.isMutant);
+        GetText((int)Texts.Text_Name).text = target.DNA.StatusCode.gameObject.tag;
+        GetText((int)Texts.Text_Level).text = $"Lv.{target.DNA.StatusCode.Stats[StatType.Level]}";
+        GetObject((int)GameObjects.Img_Mutant).SetActive(target.DNA.isMutant);
     }
 
     private void SetHpRatio(float ratio)
     {
         GetSlider((int)Sliders.Slider_Hpbar).value = ratio;
-        GetText((int)Texts.Text_Hp).text = $"{target.dna.stat.Stats[StatType.Hp]}/{target.dna.stat.HpMax}";
+        GetText((int)Texts.Text_Hp).text = $"{target.DNA.StatusCode.Stats[StatType.Hp]}/{target.DNA.StatusCode.HpMax}";
     }
 
     public void SetExpRatio(float ratio)
     {
         GetSlider((int)Sliders.Slider_Expbar).value = ratio;
-        Data.ChickenStat next = target.dna.stat.GetComponent<Data.ChickenStat>();
-        GetText((int)Texts.Text_Exp).text = $"{target.feedsFound}/{next.ExpMax}";
+        Data.ChickenStat next = target.DNA.StatusCode.GetComponent<Data.ChickenStat>();
+        //GetText((int)Texts.Text_Exp).text = $"{target.feedsFound}/{next.ExpMax}";
     }
 }

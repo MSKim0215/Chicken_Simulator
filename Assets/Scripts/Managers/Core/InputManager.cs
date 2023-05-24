@@ -17,7 +17,7 @@ public class InputManager
             if(Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("Unit")))
             {
                 UI_UnitInfo info = Managers.UI.ShowPopupUI<UI_UnitInfo>();
-                info.SetTarget(hit.collider.GetComponent<Brain>());
+                info.SetTarget(hit.collider.GetComponent<ChickensBrain>());
             }
             else
             {

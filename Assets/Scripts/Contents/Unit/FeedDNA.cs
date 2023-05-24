@@ -23,14 +23,9 @@ public class FeedDNA : RootDNA
         dnaCodeLength = GenesCode.Count;
     }
 
-    private void OnEnable()
+    public void SetStatus(FeedStat stat)
     {
-        StatusCode = GetComponent<FeedStat>();
+        StatusCode = stat;
         StatusCode.Init();
-    }
-
-    private void OnDisable()
-    {
-        StatusCode = null;
     }
 }

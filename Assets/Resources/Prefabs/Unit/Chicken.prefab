@@ -305,7 +305,7 @@ GameObject:
   - component: {fileID: 4303844821561524}
   - component: {fileID: 95943282229431942}
   - component: {fileID: 7353932126762447930}
-  - component: {fileID: 1071514042057368382}
+  - component: {fileID: 7998442986986196111}
   - component: {fileID: 2829797543596460570}
   - component: {fileID: 4600670572599621166}
   - component: {fileID: 1639893350050829960}
@@ -370,7 +370,7 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.3
   m_Center: {x: 0, y: 0.3, z: 0}
---- !u!114 &1071514042057368382
+--- !u!114 &7998442986986196111
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -379,13 +379,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1311290861401530}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c9e65502bbb1d64a979cd41eedfed8c, type: 3}
+  m_Script: {fileID: 11500000, guid: 11180a141a0018a4198fefe2d79dc1f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  state: 0
-  targetObj: {fileID: 0}
-  eyes: {fileID: 7612719540804119182}
-  feedsFound: 0
 --- !u!114 &2829797543596460570
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -420,6 +416,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da6f33b7bba459c438df1fb35f2b027e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  nextStat:
+    Level: 0
+    ExpMax: 0
+    HpMax: 0
+    AttackPower: 0
+    Defense: 0
+    MoveSpeed: 0
+    EatRange: 0
 --- !u!114 &1639893350050829960
 MonoBehaviour:
   m_ObjectHideFlags: 0
