@@ -17,6 +17,7 @@ public class GameManager
     public int BeginPopulationSize => beginPopulationSize;
 
     private HashSet<GameObject> chicks = new HashSet<GameObject>();     // 병아리 집합
+    private HashSet<GameObject> chickens = new HashSet<GameObject>();   // 닭 집합
     private HashSet<GameObject> feeds = new HashSet<GameObject>();      // 먹이 집합
     
     private Dictionary<bool, Material> chickMaterials = new Dictionary<bool, Material>();   // 돌연변이, 일반 병아리 머티리얼
@@ -44,12 +45,28 @@ public class GameManager
         {
             case Define.WorldObject.Chick:
                 {
-                    chicks.Add(prefab);
-                    prefab.transform.position = RandomSpawnPoint();
-                    prefab.transform.rotation = RandomSpawnRotate();
-                    OnSpawnEvent?.Invoke(spawnCount);
+                    if (!chicks.Contains(prefab))
+                    {
+                        chicks.Add(prefab);
+                        prefab.transform.position = RandomSpawnPoint();
+                        prefab.transform.rotation = RandomSpawnRotate();
+                        OnSpawnEvent?.Invoke(spawnCount);
+                    }
                 }
                 break;
+
+            case Define.WorldObject.Chicken:
+                {
+                    if(!chickens.Contains(prefab))
+                    {
+                        chickens.Add(prefab);
+                        prefab.transform.position = RandomSpawnPoint();
+                        prefab.transform.rotation = RandomSpawnRotate();
+                        OnSpawnEvent?.Invoke(spawnCount);
+                    }
+                }
+                break;
+
             case Define.WorldObject.Feed:
                 {
                     if (!feeds.Contains(prefab))
@@ -58,6 +75,26 @@ public class GameManager
                         prefab.transform.position = RandomSpawnPoint();
                         prefab.transform.rotation = RandomSpawnRotate();
                         prefab.transform.position = new Vector3(prefab.transform.position.x, 0.05f, prefab.transform.position.z);
+                        OnSpawnEvent?.Invoke(spawnCount);
+                    }
+                }
+                break;
+        }
+        return prefab;
+    }
+
+    public GameObject Spawn(Define.WorldObject type, string path, Vector3 dir, Quaternion eulr, Transform parent = null, int spawnCount = 1)
+    {
+        GameObject prefab = Managers.Resource.Instantiate(path, parent);
+        switch (type)
+        {
+            case Define.WorldObject.Chicken:
+                {
+                    if (!chickens.Contains(prefab))
+                    {
+                        prefab.transform.localPosition = dir;
+                        prefab.transform.rotation = eulr;
+                        chickens.Add(prefab);
                         OnSpawnEvent?.Invoke(spawnCount);
                     }
                 }
@@ -86,6 +123,17 @@ public class GameManager
                     }
                 }
                 break;
+
+            case Define.WorldObject.Chicken:
+                {
+                    if (chickens.Contains(target))
+                    {
+                        chickens.Remove(target);
+                        OnSpawnEvent?.Invoke(despawnCount);
+                    }
+                }
+                break;
+
             case Define.WorldObject.Feed:
                 {
                     if (feeds.Contains(target))
@@ -131,6 +179,44 @@ public class GameManager
         chicken.transform.position = RandomSpawnPoint();
         chicken.transform.rotation = RandomSpawnRotate();
         return chicken;
+    }
+
+    public void Evolution()
+    {
+        List<GameObject> chicks = GetEvolutionAble();
+        int count = chicks.Count;
+        if (count == 0) return;
+
+        GameObject chickenFlock = GameObject.Find("ChickenFlock");
+        if (chickenFlock == null)
+        {
+            chickenFlock = new GameObject { name = "ChickenFlock" };
+        }
+
+        for (int i = 0; i < count; i++)
+        {
+            Spawn(Define.WorldObject.Chicken, "Unit/Chicken", chicks[i].transform.localPosition, chicks[i].transform.rotation, chickenFlock.transform);
+        }
+
+        for (int i = 0; i < count; i++)
+        {
+            Despawn(chicks[i]);
+        }
+    }
+
+    private List<GameObject> GetEvolutionAble()
+    {
+        List<GameObject> result = new List<GameObject>();
+        foreach(GameObject chick in chicks)
+        {
+            ChickenStat stat = chick.GetComponent<ChickenStat>();
+            if(!Managers.Data.ChickStatDict.TryGetValue((int)stat.Stats[StatType.Level] + 1, out _))
+            {
+                Debug.Log("최대 레벨 달성");
+                result.Add(chick);
+            }
+        }
+        return result;
     }
 
     public void OnUpdate()

@@ -26,7 +26,16 @@ public class GameScene : BaseScene
         //Managers.UI.ShowSceneUI<UI_Joystick>();
         //Managers.UI.ShowSceneUI<UI_AttackButton>().SetPlayer(player);
 
-        Managers.Game.SpawnChicken(Managers.Game.BeginPopulationSize);
+        GameObject chickFlock = GameObject.Find("ChickFlock");
+        if(chickFlock == null)
+        {
+            chickFlock = new GameObject { name = "ChickFlock" };
+        }
+
+        for(int i = 0; i < Managers.Game.BeginPopulationSize; i++)
+        {
+            Managers.Game.Spawn(Define.WorldObject.Chick, "Unit/Chick", chickFlock.transform);
+        }
 
         GameObject spawner = GameObject.Find("FeedSpawner");
         if (spawner == null)

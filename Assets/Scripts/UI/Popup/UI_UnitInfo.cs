@@ -46,8 +46,9 @@ public class UI_UnitInfo : UI_Popup
         float hpRatio = (int)target.dna.stat.Stats[StatType.Hp] / (float)target.dna.stat.HpMax;
         SetHpRatio(hpRatio);
 
-        float expRatio = target.feedsFound / (int)target.dna.stat.Stats[StatType.ExpMax];
-        SetExpRatio(expRatio);
+        //Data.ChickenStat next = target.dna.stat.GetComponent<Data.ChickenStat>();
+        //float expRatio = target.feedsFound / next.ExpMax;
+        //SetExpRatio(expRatio);
     }
 
     private void RefreshUI()
@@ -63,9 +64,10 @@ public class UI_UnitInfo : UI_Popup
         GetText((int)Texts.Text_Hp).text = $"{target.dna.stat.Stats[StatType.Hp]}/{target.dna.stat.HpMax}";
     }
 
-    private void SetExpRatio(float ratio)
+    public void SetExpRatio(float ratio)
     {
         GetSlider((int)Sliders.Slider_Expbar).value = ratio;
-        GetText((int)Texts.Text_Exp).text = $"{target.feedsFound}/{target.dna.stat.Stats[StatType.ExpMax]}";
+        Data.ChickenStat next = target.dna.stat.GetComponent<Data.ChickenStat>();
+        GetText((int)Texts.Text_Exp).text = $"{target.feedsFound}/{next.ExpMax}";
     }
 }

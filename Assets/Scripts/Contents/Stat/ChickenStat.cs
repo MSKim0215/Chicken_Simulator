@@ -6,7 +6,9 @@ public class ChickenStat : Stat
 {
     private Define.ChickenType type;
     private int nowExp;
-    
+
+    public Data.ChickenStat nextStat;
+
     public int NowExp 
     { 
         get => nowExp; 
@@ -16,21 +18,21 @@ public class ChickenStat : Stat
 
             // TODO: 레벨업 체크 로직
             int level = (int)Stats[StatType.Level];
-            Data.ChickenStat stat;
 
             while(true)
             {
                 if(type == Define.ChickenType.Chick)
                 {
-                    if (!Managers.Data.ChickStatDict.TryGetValue(level + 1, out stat)) break;
-                    if (nowExp < stat.ExpMax) break;
+                    if (!Managers.Data.ChickStatDict.TryGetValue(level + 1, out nextStat)) break;
+                    if (nowExp < nextStat.ExpMax) break;
                 }
                 else if(type == Define.ChickenType.Chicken)
                 {
-                    if(!Managers.Data.ChickenStatDict.TryGetValue(level + 1, out stat)) break;
-                    if (nowExp < stat.ExpMax) break;
+                    if(!Managers.Data.ChickenStatDict.TryGetValue(level + 1, out nextStat)) break;
+                    if (nowExp < nextStat.ExpMax) break;
                 }
                 level++;
+                Debug.Log("레벨 상승! 현재: " + level);
             }
 
             if(level != (int)Stats[StatType.Level])

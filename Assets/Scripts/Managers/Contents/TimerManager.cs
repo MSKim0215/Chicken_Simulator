@@ -54,7 +54,11 @@ public class TimerManager
             if(CurrentTimes > changeTimes)
             {
                 if (Meridiem == TimeMeridiem.AM) Meridiem = TimeMeridiem.PM;
-                else Meridiem = TimeMeridiem.AM;
+                else
+                {
+                    Meridiem = TimeMeridiem.AM;
+                    Managers.Game.Evolution();
+                }
 
                 //Managers.Game.BreedNewPopulation();
 
