@@ -17,8 +17,10 @@ public class GameManager
     public int BeginPopulationSize => beginPopulationSize;
 
     private HashSet<GameObject> chicks = new HashSet<GameObject>();     // 병아리 집합
-    public HashSet<GameObject> feeds = new HashSet<GameObject>();      // 먹이 집합
+    private HashSet<GameObject> feeds = new HashSet<GameObject>();      // 먹이 집합
+    
     private Dictionary<bool, Material> chickMaterials = new Dictionary<bool, Material>();   // 돌연변이, 일반 병아리 머티리얼
+    private Dictionary<bool, Material> chickenMaterials = new Dictionary<bool, Material>(); // 돌연변이, 일반 닭 머티리얼
 
     public Action<int> OnSpawnEvent;
 
@@ -30,6 +32,9 @@ public class GameManager
 
         chickMaterials.Add(true, Managers.Resource.Load<Material>("Materials/Mutant Chick"));
         chickMaterials.Add(false, Managers.Resource.Load<Material>("Materials/Normal Chick"));
+
+        chickenMaterials.Add(true, Managers.Resource.Load<Material>("Materials/Mutant Chicken"));
+        chickenMaterials.Add(false, Managers.Resource.Load<Material>("Materials/Normal Chicken"));
     }
 
     public GameObject Spawn(Define.WorldObject type, string path, Transform parent = null, int spawnCount = 1)
@@ -155,11 +160,23 @@ public class GameManager
         {   // 돌연변이 발현, 1% 확률
             brain.dna.isMutant = true;
 
-            SkinnedMeshRenderer skin = offsetSpring.transform.Find("Toon Chick").GetComponent<SkinnedMeshRenderer>();            
-            Material[] mats = skin.materials;
-            mats[0] = chickMaterials[brain.dna.isMutant];
-            skin.materials = mats;
+            SkinnedMeshRenderer skin;
 
+            if(brain.dna.WorldObjectType == Define.WorldObject.Chick)
+            {
+                skin = offsetSpring.transform.Find("Toon Chick").GetComponent<SkinnedMeshRenderer>();
+                Material[] mats = skin.materials;
+                mats[0] = chickMaterials[brain.dna.isMutant];
+                skin.materials = mats;
+            }
+            else if(brain.dna.WorldObjectType == Define.WorldObject.Chicken)
+            {
+                skin = offsetSpring.transform.Find("Toon Chicken").GetComponent<SkinnedMeshRenderer>();
+                Material[] mats = skin.materials;
+                mats[0] = chickenMaterials[brain.dna.isMutant];
+                skin.materials = mats;
+            }
+            
             Debug.LogWarning($"뮤턴트 발생! {offsetSpring.name + offsetSpring.transform.GetSiblingIndex()}");
         }
         else
@@ -174,6 +191,7 @@ public class GameManager
         switch (tag)
         {
             case "Chick": return SpawnChick();
+            case "Chicken": return SpawnChicken();
         }
         return null;
     }
@@ -181,7 +199,7 @@ public class GameManager
     /// <summary>
     /// 새로운 세대의 병아리를 번식 생성하는 함수
     /// </summary>
-    private void BreedNewPopulation()
+    public void BreedNewPopulation()
     {
         // 먹이를 가장 많이 먹은 개체 위주로 번식 시킴
         List<GameObject> sortedList = CurrGeneraionList.OrderByDescending(o => o.GetComponent<Brain>().feedsFound).ToList();

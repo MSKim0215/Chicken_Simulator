@@ -56,6 +56,8 @@ public class TimerManager
                 if (Meridiem == TimeMeridiem.AM) Meridiem = TimeMeridiem.PM;
                 else Meridiem = TimeMeridiem.AM;
 
+                //Managers.Game.BreedNewPopulation();
+
                 CurrentTimes = 0f;
             }
         }
