@@ -11,51 +11,38 @@ public enum DNAType
     SafeFound       // 안전 구역 탐색 가중치
 }
 
-public class DNA
+public class RootDNA : MonoBehaviour
 {
-    public Dictionary<DNAType, float> genes;        // 유전자 코드
-    public Stat stat { private set; get; }
+    protected int dnaCodeLength;        // 유전자 코드 길이
 
-    private int dnaLength;
+    public bool isMutant = false;     // 돌연변이 여부
 
-    public bool isMutant = false;
+    public Dictionary<DNAType, float> GenesCode { get; protected set; } = new Dictionary<DNAType, float>();     // 유전자 코드
+    public Stat StatusCode { get; protected set; }      // 능력치 코드
+    public Define.WorldObject WorldObjectType { get; protected set; } = Define.WorldObject.Unknown;
 
-    public Define.WorldObject WorldObjectType { get; private set; } = Define.WorldObject.Unknown;
-    
-    public DNA()
+    public RootDNA()
     {
-        genes = new Dictionary<DNAType, float>();
-        SetRandom();
+        SetRandomGenesCode();
     }
 
-    public void SetStat(Stat stat, Define.ChickenType type)
+    protected virtual void SetRandomGenesCode()
     {
-        this.stat = stat;
-        stat.Init(type);
-
-        if(type == Define.ChickenType.Chick)
-        {
-            WorldObjectType = Define.WorldObject.Chick;
-        }
-    }
-
-    public void SetRandom()
-    {
-        genes.Clear();
-        genes.Add(DNAType.Avoidance, 1f);
-        genes.Add(DNAType.Cohesion, 1f);
-        genes.Add(DNAType.FeedFound, 1f);
-        genes.Add(DNAType.SafeFound, 1f);
-        dnaLength = genes.Count;
+        GenesCode.Clear();
+        //GenesCode.Add(DNAType.Avoidance, 1f);
+        //GenesCode.Add(DNAType.Cohesion, 1f);
+        //GenesCode.Add(DNAType.FeedFound, 1f);
+        //GenesCode.Add(DNAType.SafeFound, 1f);
+        //dnaCodeLength = GenesCode.Count;
     }
 
     public void CombineGenes(DNA dna1, DNA dna2)
     {
         int i = 0;      // 첫번째 DNA, 두번째 DNA 교차 조합
         Dictionary<DNAType, float> newGenes = new Dictionary<DNAType, float>();   // 새로운 유전자
-        foreach(KeyValuePair<DNAType, float> g in genes)
+        foreach (KeyValuePair<DNAType, float> g in GenesCode)
         {
-            if(i < dnaLength / 2)
+            if (i < dnaCodeLength / 2)
             {   // dna 길이의 절반은 첫번째 DNA 계승
                 newGenes.Add(g.Key, dna1.genes[g.Key]);
             }
@@ -65,19 +52,19 @@ public class DNA
             }
             i++;
         }
-        genes = newGenes;
+        GenesCode = newGenes;
     }
 
     public void CombineStat(DNA dna1, DNA dna2)
     {
         Stat newStat = new Stat();      // 새로운 스탯
-        for(int i = 0; i < Enum.GetValues(typeof(StatType)).Length; i++)
+        for (int i = 0; i < Enum.GetValues(typeof(StatType)).Length; i++)
         {
             StatType statType = (StatType)i;
 
-            if(UnityEngine.Random.Range(0f, 1f) < 0.5f)
+            if (UnityEngine.Random.Range(0f, 1f) < 0.5f)
             {   // 50% 확률로 첫번째 스탯 중 하나 계승 (중복 스탯x)
-                if(!newStat.Stats.ContainsKey(statType))
+                if (!newStat.Stats.ContainsKey(statType))
                 {
                     newStat.Stats.Add(statType, dna1.stat.Stats[statType]);
                 }
@@ -90,11 +77,6 @@ public class DNA
                 }
             }
         }
-        stat = newStat;
-    }
-
-    public float GetGene(DNAType seeFeed)
-    {
-        return genes[seeFeed];
+        StatusCode = newStat;
     }
 }

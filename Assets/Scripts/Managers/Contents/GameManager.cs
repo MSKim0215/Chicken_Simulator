@@ -59,9 +59,9 @@ public class GameManager
 
     private Define.WorldObject GetWorldObjectType(GameObject target)
     {
-        Brain brain = target.GetComponent<Brain>();
-        if (brain == null) return Define.WorldObject.Unknown;
-        return brain.dna.WorldObjectType;
+        RootDNA root = target.GetComponent<RootDNA>();
+        if (root) return Define.WorldObject.Unknown;
+        return root.WorldObjectType;
     }
 
     public void Despawn(GameObject target)
@@ -87,13 +87,6 @@ public class GameManager
                 }
                 break;
         }
-
-        if (feeds.Contains(target))
-        {
-            feeds.Remove(target);
-            OnSpawnEvent?.Invoke(-1);
-        }
-
         Managers.Resource.Destroy(target);
     }
 
