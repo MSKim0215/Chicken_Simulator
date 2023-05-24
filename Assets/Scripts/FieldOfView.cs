@@ -71,6 +71,8 @@ public class FieldOfView : MonoBehaviour
 
         foreach(Collider target in targetList)
         {
+            if (target == null) continue;
+
             Vector3 closestPoint = target.ClosestPoint(centerPoint);    // 중점과 가장 가까운 포인트 획득
             float distance = Vector3.Distance(centerPoint, closestPoint);
             if(distance < closetDistance)
