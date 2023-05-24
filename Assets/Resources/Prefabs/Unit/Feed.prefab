@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8184166545873728842}
   - component: {fileID: -5208317150666124379}
   - component: {fileID: 1108172455}
+  - component: {fileID: 7007016330804863295}
   m_Layer: 7
   m_Name: Feed
   m_TagString: Feed
@@ -124,3 +125,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52515ae584e56cf4fbe9bf52932abf3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7007016330804863295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8184166545873728843}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 145ab7317b96b064a8f49477fc5730a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isUsing: 0

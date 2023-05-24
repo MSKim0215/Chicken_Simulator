@@ -17,7 +17,7 @@ public class GameManager
     public int BeginPopulationSize => beginPopulationSize;
 
     private HashSet<GameObject> chicks = new HashSet<GameObject>();     // 병아리 집합
-    private HashSet<GameObject> feeds = new HashSet<GameObject>();      // 먹이 집합
+    public HashSet<GameObject> feeds = new HashSet<GameObject>();      // 먹이 집합
     private Dictionary<bool, Material> chickMaterials = new Dictionary<bool, Material>();   // 돌연변이, 일반 병아리 머티리얼
 
     public Action<int> OnSpawnEvent;
@@ -32,25 +32,29 @@ public class GameManager
         chickMaterials.Add(false, Managers.Resource.Load<Material>("Materials/Normal Chick"));
     }
 
-    public GameObject Spawn(Define.WorldObject type, string path, Transform parent = null)
+    public GameObject Spawn(Define.WorldObject type, string path, Transform parent = null, int spawnCount = 1)
     {
         GameObject prefab = Managers.Resource.Instantiate(path, parent);
-        prefab.transform.position = RandomSpawnPoint();
-        prefab.transform.rotation = RandomSpawnRotate();
-
         switch (type)
         {
             case Define.WorldObject.Chick:
                 {
                     chicks.Add(prefab);
-                    OnSpawnEvent?.Invoke(1);
+                    prefab.transform.position = RandomSpawnPoint();
+                    prefab.transform.rotation = RandomSpawnRotate();
+                    OnSpawnEvent?.Invoke(spawnCount);
                 }
                 break;
             case Define.WorldObject.Feed:
                 {
-                    prefab.transform.position = new Vector3(prefab.transform.position.x, 0.05f, prefab.transform.position.z);
-                    feeds.Add(prefab);
-                    OnSpawnEvent?.Invoke(1);
+                    if (!feeds.Contains(prefab))
+                    {
+                        feeds.Add(prefab);
+                        prefab.transform.position = RandomSpawnPoint();
+                        prefab.transform.rotation = RandomSpawnRotate();
+                        prefab.transform.position = new Vector3(prefab.transform.position.x, 0.05f, prefab.transform.position.z);
+                        OnSpawnEvent?.Invoke(spawnCount);
+                    }
                 }
                 break;
         }
@@ -60,11 +64,11 @@ public class GameManager
     private Define.WorldObject GetWorldObjectType(GameObject target)
     {
         RootDNA root = target.GetComponent<RootDNA>();
-        if (root) return Define.WorldObject.Unknown;
+        if (root == null) return Define.WorldObject.Unknown;
         return root.WorldObjectType;
     }
 
-    public void Despawn(GameObject target)
+    public void Despawn(GameObject target, int despawnCount = -1)
     {
         switch(GetWorldObjectType(target))
         {
@@ -73,7 +77,7 @@ public class GameManager
                     if (chicks.Contains(target))
                     {
                         chicks.Remove(target);
-                        OnSpawnEvent?.Invoke(-1);
+                        OnSpawnEvent?.Invoke(despawnCount);
                     }
                 }
                 break;
@@ -82,7 +86,7 @@ public class GameManager
                     if (feeds.Contains(target))
                     {
                         feeds.Remove(target);
-                        OnSpawnEvent?.Invoke(-1);
+                        OnSpawnEvent?.Invoke(despawnCount);
                     }
                 }
                 break;
@@ -105,23 +109,6 @@ public class GameManager
         chick.transform.position = RandomSpawnPoint();
         chick.transform.rotation = RandomSpawnRotate();
         return chick;
-    }
-
-    public void SpawnFeed(int count)
-    {
-        for (int i = 0; i < count; i++)
-        {
-            GameObject feed = SpawnFeed();
-        }
-    }
-
-    private GameObject SpawnFeed()
-    {
-        GameObject feed = Managers.Resource.Instantiate("Unit/Feed");
-        feed.transform.position = RandomSpawnPoint();
-        feed.transform.position = new Vector3(feed.transform.position.x, 0.05f, feed.transform.position.z);
-        feed.transform.rotation = RandomSpawnRotate();
-        return feed;
     }
 
     public void OnUpdate()

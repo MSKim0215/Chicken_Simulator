@@ -28,9 +28,12 @@ public class GameScene : BaseScene
 
         Managers.Game.SpawnChick(Managers.Game.BeginPopulationSize);
 
-        GameObject feedSpawningPool = new GameObject { name = "SpawningPool" };
-        SpawnManager pool = feedSpawningPool.GetOrAddComponent<SpawnManager>();
-        pool.SetKeepFeedCount(15);
+        GameObject spawner = GameObject.Find("FeedSpawner");
+        if (spawner == null)
+        {
+            spawner = new GameObject { name = "FeedSpawner" };
+        }
+        SpawnManager feedSpawner = spawner.GetOrAddComponent<SpawnManager>();
     }
 
     public override void Clear()

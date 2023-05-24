@@ -4,12 +4,12 @@ using UnityEngine;
 
 public abstract class CharacterBrain : MonoBehaviour
 {
-    protected Vector3 destPos;          // 목표 지점
-    protected GameObject targetObj;     // 목표 오브젝트
-
     [Header("캐릭터 상태")]
     [SerializeField] protected Define.CharacterState state = Define.CharacterState.Idle;
+    protected Vector3 destPos;          // 목표 지점
 
+    public GameObject targetObj;     // 목표 오브젝트
+    
     public virtual Define.CharacterState State
     {
         get => state;

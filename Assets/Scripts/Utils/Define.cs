@@ -58,4 +58,9 @@ public class Define
     {
         None, Egg, Chick, Chicken
     }
+
+    public enum FeedMakeCount
+    {
+        AM = 15, PM = 30
+    }
 }

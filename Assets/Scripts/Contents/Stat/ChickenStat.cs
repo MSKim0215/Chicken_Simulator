@@ -27,7 +27,6 @@ public class ChickenStat : Stat
 
             if(level != (int)Stats[StatType.Level])
             {
-                Debug.Log("·¹º§ »ó½Â");
                 Init(type, level);
             }
         }

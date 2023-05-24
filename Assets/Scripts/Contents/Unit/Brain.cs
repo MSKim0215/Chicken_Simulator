@@ -47,7 +47,6 @@ public class Brain : CharacterBrain
                 float centerDistance = centerVec.magnitude;
                 if (centerDistance > 5f)
                 {
-                    Debug.Log("밖으로 나감");
                     randPos = transform.position + Random.insideUnitSphere * 1.5f;
                     randPos.y = 0f;
                 }
@@ -70,7 +69,6 @@ public class Brain : CharacterBrain
             {
                 if(targetObj.CompareTag("Feed"))
                 {
-                    Debug.Log("이따다키마스");
                     State = Define.CharacterState.Eat;
                     fov.DebugMode = false;
                     return;
@@ -162,8 +160,6 @@ public class Brain : CharacterBrain
     #region Event Callback
     private void OnEatEvent()
     {
-        Debug.Log("음 맛있다~");
-
         if(targetObj != null)
         {
             if(targetObj.CompareTag("Feed"))

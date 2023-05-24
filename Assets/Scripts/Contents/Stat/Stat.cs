@@ -42,7 +42,6 @@ public class Stat : MonoBehaviour
         if ((int)Stats[StatType.Hp] <= 0)
         {
             Stats[StatType.Hp] = 0;
-            Debug.Log("À¸¾Ó Á×À½");
             OnDead(attacker);
         }
     }
@@ -52,7 +51,9 @@ public class Stat : MonoBehaviour
         ChickenStat chickenStat = attacker as ChickenStat;
         if(chickenStat != null)
         {
-            chickenStat.GetComponent<Brain>().feedsFound++;
+            Brain brain = chickenStat.GetComponent<Brain>();
+            brain.feedsFound++;
+            brain.targetObj = null;
             chickenStat.NowExp += 1;
         }
         Managers.Game.Despawn(gameObject);

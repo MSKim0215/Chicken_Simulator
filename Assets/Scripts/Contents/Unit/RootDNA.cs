@@ -18,7 +18,6 @@ public class RootDNA : MonoBehaviour
     public bool isMutant = false;     // 돌연변이 여부
 
     public Dictionary<DNAType, float> GenesCode { get; protected set; } = new Dictionary<DNAType, float>();     // 유전자 코드
-    public Stat StatusCode { get; protected set; }      // 능력치 코드
     public Define.WorldObject WorldObjectType { get; protected set; } = Define.WorldObject.Unknown;
 
     public RootDNA()
@@ -77,6 +76,6 @@ public class RootDNA : MonoBehaviour
                 }
             }
         }
-        StatusCode = newStat;
+        //StatusCode = newStat;
     }
 }

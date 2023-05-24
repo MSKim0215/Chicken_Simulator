@@ -36,8 +36,10 @@ public class Managers : MonoBehaviour
 
     #region Contents
     private GameManager game = new GameManager();
+    private TimerManager timer = new TimerManager();
 
     public static GameManager Game => Instance.game;
+    public static TimerManager Timer => Instance.timer;
     #endregion
 
     private void Start()
@@ -59,10 +61,12 @@ public class Managers : MonoBehaviour
             DontDestroyOnLoad(target);
             s_instance = target.GetComponent<Managers>();
 
-            s_instance.game.Init();
             s_instance.data.Init();
             s_instance.pool.Init();
             s_instance.sound.Init();
+
+            s_instance.game.Init();
+            s_instance.timer.Init();
         }
     }
 
@@ -77,7 +81,9 @@ public class Managers : MonoBehaviour
     private void Update()
     {
         Input.OnUpdate();
+        
         Game.OnUpdate();
+        Timer.OnUpdate();
     }
 
     GUIStyle guiStyle = new GUIStyle();
@@ -88,7 +94,8 @@ public class Managers : MonoBehaviour
         GUI.BeginGroup(new Rect(10, 10, 250, 250));
         GUI.Box(new Rect(0, 0, 140, 140), "목록", guiStyle);
         GUI.Label(new Rect(10, 25, 200, 30), "현재 세대: " + game.Generation, guiStyle);
-        GUI.Label(new Rect(10, 50, 200, 30), string.Format("세대 교체 시간: {0:0.00}", GameManager.elapsed), guiStyle);
+        GUI.Label(new Rect(10, 50, 200, 30), string.Format("현재 시각: {0} {1:0.00}", timer.Meridiem, timer.CurrentTimes), guiStyle);
+        //GUI.Label(new Rect(10, 50, 200, 30), string.Format("세대 교체 시간: {0:0.00}", GameManager.elapsed), guiStyle);
         GUI.Label(new Rect(10, 75, 200, 30), "인구수: " + game.CurrGeneraionList.Count, guiStyle);
         GUI.EndGroup();
     }
