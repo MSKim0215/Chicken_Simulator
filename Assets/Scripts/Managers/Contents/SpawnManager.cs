@@ -25,7 +25,7 @@ public class SpawnManager : MonoBehaviour
 
         for (int i = 0; i < (int)Define.FeedMakeCount.AM; i++)
         {
-            Managers.Game.Spawn(Define.WorldObject.Feed, "Unit/Feed", transform);
+            Managers.Game.Spawn("Unit/Feed", transform);
         }
     }
 
@@ -47,7 +47,7 @@ public class SpawnManager : MonoBehaviour
             spawnTime / 2f      // 밤에는 먹이 생성 주기 절반 감소
             );
 
-        Managers.Game.Spawn(Define.WorldObject.Feed, "Unit/Feed", transform);
+        Managers.Game.Spawn("Unit/Feed", transform);
         reserveCount--;
     }
 

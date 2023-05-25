@@ -6,9 +6,13 @@ public class ChickensDNA : RootDNA
 {
     public ChickenStat StatusCode { private set; get; }     // 능력치 코드
 
-    public ChickensDNA()
+    public void Init(ChickenStat stat, Define.ChickenType type)
     {
-        WorldObjectType = Define.WorldObject.Chicken;
+        WorldObjectType = Define.WorldObject.ChickGroup;
+
+        StatusCode = stat;
+        StatusCode.Init(type);
+
         SetRandomGenesCode();
     }
 
@@ -16,16 +20,18 @@ public class ChickensDNA : RootDNA
     {
         base.SetRandomGenesCode();
 
-        GenesCode.Add(DNAType.Avoidance, 1f);
-        GenesCode.Add(DNAType.Cohesion, 1f);
-        GenesCode.Add(DNAType.FeedFound, 1f);
-        GenesCode.Add(DNAType.SafeFound, 1f);
+        GenesCode.Add(DNAType.Avoidance, Random.Range(0.1f, 1f));
+        GenesCode.Add(DNAType.Cohesion, Random.Range(0.1f, 1f));
+        GenesCode.Add(DNAType.FeedFound, Random.Range(0.1f, 1f));
+        GenesCode.Add(DNAType.SafeFound, Random.Range(0.1f, 1f));
         dnaCodeLength = GenesCode.Count;
     }
 
-    public void SetStatus(ChickenStat stat, Define.ChickenType type)
-    {
-        StatusCode = stat;
-        StatusCode.Init(type);
-    }
+    public int Level => StatusCode.Level;
+    public int ExpMax => StatusCode.ExpMax;
+    public int Hp => StatusCode.Hp;
+    public float MoveSpeed => StatusCode.MoveSpeed;
+    public int AttackPower => StatusCode.AttackPower;
+    public float EatRange => StatusCode.EatRange;
+    public int Defense => StatusCode.Defense;
 }

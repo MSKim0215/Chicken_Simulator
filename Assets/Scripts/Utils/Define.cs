@@ -41,17 +41,12 @@ public class Define
 
     public enum WorldObject
     {
-        Unknown, Egg, Chick, Chicken, Fox, Feed
-    }
-
-    public enum MonsterType
-    {
-        BananaMan = 100
+        Unknown, ChickGroup, FoxGroup, NeutralGroup
     }
 
     public enum CharacterState
     {
-        Idle, Moving, Eat
+        Idle, Moving, Eat, Die
     }
 
     public enum ChickenType

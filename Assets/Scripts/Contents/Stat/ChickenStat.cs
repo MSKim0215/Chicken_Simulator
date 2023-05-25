@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class ChickenStat : Stat
@@ -17,7 +18,7 @@ public class ChickenStat : Stat
             nowExp = value;
 
             // TODO: 레벨업 체크 로직
-            int level = (int)Stats[StatType.Level];
+            int level = Level;
 
             while(true)
             {
@@ -34,12 +35,20 @@ public class ChickenStat : Stat
                 level++;
             }
 
-            if(level != (int)Stats[StatType.Level])
+            if(level != Level)
             {
                 Init(type, level);
             }
         }
     }
+
+    public int Level => (int)Stats[StatType.Level];
+    public int ExpMax => (int)Stats[StatType.ExpMax];
+    public int Hp => (int)Stats[StatType.Hp];
+    public float MoveSpeed => (float)Stats[StatType.MoveSpeed];
+    public int AttackPower => (int)Stats[StatType.AttackPower];
+    public float EatRange => (float)Stats[StatType.EatRange];
+    public int Defense => (int)Stats[StatType.Defense];
 
     public override void Init(Define.ChickenType type = Define.ChickenType.None, int level = 1)
     {
@@ -53,7 +62,7 @@ public class ChickenStat : Stat
             case Define.ChickenType.Chicken: SetChickenStat(level); break;
         }
 
-        HpMax = (int)Stats[StatType.Hp];
+        HpMax = Hp;
         NowExp = 0;
     }
 

@@ -16,6 +16,7 @@ public class GameManager
     public int Generation { private set; get; } = 1;     // 세대
     public int BeginPopulationSize => beginPopulationSize;
 
+    private HashSet<GameObject> eggs = new HashSet<GameObject>();       // 알 집합
     private HashSet<GameObject> chicks = new HashSet<GameObject>();     // 병아리 집합
     private HashSet<GameObject> chickens = new HashSet<GameObject>();   // 닭 집합
     private HashSet<GameObject> feeds = new HashSet<GameObject>();      // 먹이 집합
@@ -38,36 +39,36 @@ public class GameManager
         chickenMaterials.Add(false, Managers.Resource.Load<Material>("Materials/Normal Chicken"));
     }
 
-    public GameObject Spawn(Define.WorldObject type, string path, Transform parent = null, int spawnCount = 1)
+    public GameObject Spawn(string path, Transform parent = null)
     {
         GameObject prefab = Managers.Resource.Instantiate(path, parent);
-        switch (type)
+        switch(prefab.tag)
         {
-            case Define.WorldObject.Chick:
+            case "Chick":
                 {
                     if (!chicks.Contains(prefab))
                     {
                         chicks.Add(prefab);
                         prefab.transform.position = RandomSpawnPoint();
                         prefab.transform.rotation = RandomSpawnRotate();
-                        OnSpawnEvent?.Invoke(spawnCount);
+                        OnSpawnEvent?.Invoke(1);
                     }
                 }
                 break;
 
-            case Define.WorldObject.Chicken:
+            case "Chicken":
                 {
-                    if(!chickens.Contains(prefab))
+                    if (!chickens.Contains(prefab))
                     {
                         chickens.Add(prefab);
                         prefab.transform.position = RandomSpawnPoint();
                         prefab.transform.rotation = RandomSpawnRotate();
-                        OnSpawnEvent?.Invoke(spawnCount);
+                        OnSpawnEvent?.Invoke(1);
                     }
                 }
                 break;
 
-            case Define.WorldObject.Feed:
+            case "Feed":
                 {
                     if (!feeds.Contains(prefab))
                     {
@@ -75,7 +76,7 @@ public class GameManager
                         prefab.transform.position = RandomSpawnPoint();
                         prefab.transform.rotation = RandomSpawnRotate();
                         prefab.transform.position = new Vector3(prefab.transform.position.x, 0.05f, prefab.transform.position.z);
-                        OnSpawnEvent?.Invoke(spawnCount);
+                        OnSpawnEvent?.Invoke(1);
                     }
                 }
                 break;
@@ -83,19 +84,31 @@ public class GameManager
         return prefab;
     }
 
-    public GameObject Spawn(Define.WorldObject type, string path, Vector3 dir, Quaternion eulr, Transform parent = null, int spawnCount = 1)
+    public GameObject Spawn(string path, Vector3 dir, Quaternion eulr, Transform parent = null)
     {
         GameObject prefab = Managers.Resource.Instantiate(path, parent);
-        switch (type)
+        switch (prefab.tag)
         {
-            case Define.WorldObject.Chicken:
+            case "Chicken":
                 {
                     if (!chickens.Contains(prefab))
                     {
                         prefab.transform.localPosition = dir;
                         prefab.transform.rotation = eulr;
                         chickens.Add(prefab);
-                        OnSpawnEvent?.Invoke(spawnCount);
+                        OnSpawnEvent?.Invoke(1);
+                    }
+                }
+                break;
+
+            case "Egg":
+                {
+                    if(!eggs.Contains(prefab))
+                    {
+                        prefab.transform.localPosition = dir;
+                        prefab.transform.rotation = eulr;
+                        eggs.Add(prefab);
+                        OnSpawnEvent?.Invoke(1);
                     }
                 }
                 break;
@@ -103,49 +116,36 @@ public class GameManager
         return prefab;
     }
 
-    private Define.WorldObject GetWorldObjectType(GameObject target)
+    public void Despawn(GameObject target)
     {
-        if(target.tag == "Feed")
+        switch(target.tag)
         {
-            return target.GetComponent<FeedBrain>().DNA.WorldObjectType;
-        }
-        else if(target.tag == "Chick" || target.tag == "Chicken")
-        {
-            return target.GetComponent<ChickensBrain>().DNA.WorldObjectType;
-        }
-        return Define.WorldObject.Unknown;
-    }
-
-    public void Despawn(GameObject target, int despawnCount = -1)
-    {
-        switch(GetWorldObjectType(target))
-        {
-            case Define.WorldObject.Chick:
+            case "Chick":
                 {
                     if (chicks.Contains(target))
                     {
                         chicks.Remove(target);
-                        OnSpawnEvent?.Invoke(despawnCount);
+                        OnSpawnEvent?.Invoke(-1);
                     }
                 }
                 break;
 
-            case Define.WorldObject.Chicken:
+            case "Chicken":
                 {
                     if (chickens.Contains(target))
                     {
                         chickens.Remove(target);
-                        OnSpawnEvent?.Invoke(despawnCount);
+                        OnSpawnEvent?.Invoke(-1);
                     }
                 }
                 break;
 
-            case Define.WorldObject.Feed:
+            case "Feed":
                 {
                     if (feeds.Contains(target))
                     {
                         feeds.Remove(target);
-                        OnSpawnEvent?.Invoke(despawnCount);
+                        OnSpawnEvent?.Invoke(-1);
                     }
                 }
                 break;
@@ -201,7 +201,7 @@ public class GameManager
 
         for (int i = 0; i < count; i++)
         {
-            Spawn(Define.WorldObject.Chicken, "Unit/Chicken", chicks[i].transform.localPosition, chicks[i].transform.rotation, chickenFlock.transform);
+            Spawn("Unit/Chicken", chicks[i].transform.localPosition, chicks[i].transform.rotation, chickenFlock.transform);
         }
 
         for (int i = 0; i < count; i++)
@@ -244,38 +244,47 @@ public class GameManager
     /// </summary>
     private GameObject Breed(GameObject fother, GameObject mother)
     {
-        GameObject offsetSpring = GetOffset(fother.tag);
-        ChickensBrain brain = offsetSpring.GetComponent<ChickensBrain>();
-        brain.Init();
+        GameObject child = Spawn("Unit/Egg", mother.transform.localPosition, mother.transform.rotation);
+        return child;
 
-        if (UnityEngine.Random.Range(0, 100) < 30)
-        {   // 돌연변이 발현, 1% 확률
-            brain.DNA.isMutant = true;
+        //GameObject offsetSpring = GetOffset(fother.tag);
+        //ChickensBrain brain = offsetSpring.GetComponent<ChickensBrain>();
+        //brain.Init();
 
-            SkinnedMeshRenderer skin;
+        //if (UnityEngine.Random.Range(0, 100) < 30)
+        //{   // 돌연변이 발현, 1% 확률
+        //    brain.DNA.isMutant = true;
 
-            if(brain.DNA.WorldObjectType == Define.WorldObject.Chick)
-            {
-                skin = offsetSpring.transform.Find("Toon Chick").GetComponent<SkinnedMeshRenderer>();
-                Material[] mats = skin.materials;
-                mats[0] = chickMaterials[brain.DNA.isMutant];
-                skin.materials = mats;
-            }
-            else if(brain.DNA.WorldObjectType == Define.WorldObject.Chicken)
-            {
-                skin = offsetSpring.transform.Find("Toon Chicken").GetComponent<SkinnedMeshRenderer>();
-                Material[] mats = skin.materials;
-                mats[0] = chickenMaterials[brain.DNA.isMutant];
-                skin.materials = mats;
-            }
+        //    SkinnedMeshRenderer skin;
+
+        //    switch(offsetSpring.tag)
+        //    {
+        //        case "Chick":
+        //            {
+        //                skin = offsetSpring.transform.Find("Toon Chick").GetComponent<SkinnedMeshRenderer>();
+        //                Material[] mats = skin.materials;
+        //                mats[0] = chickMaterials[brain.DNA.isMutant];
+        //                skin.materials = mats;
+        //            }
+        //            break;
+
+        //        case "Chicken":
+        //            {
+        //                skin = offsetSpring.transform.Find("Toon Chicken").GetComponent<SkinnedMeshRenderer>();
+        //                Material[] mats = skin.materials;
+        //                mats[0] = chickenMaterials[brain.DNA.isMutant];
+        //                skin.materials = mats;
+        //            }
+        //            break;
+        //    }
             
-            Debug.LogWarning($"뮤턴트 발생! {offsetSpring.name + offsetSpring.transform.GetSiblingIndex()}");
-        }
-        else
-        {
-            brain.DNA.CombineGenes(fother.GetComponent<ChickensBrain>().DNA, mother.GetComponent<ChickensBrain>().DNA);
-        }
-        return offsetSpring;
+        //    Debug.LogWarning($"뮤턴트 발생! {offsetSpring.name + offsetSpring.transform.GetSiblingIndex()}");
+        //}
+        //else
+        //{
+        //    brain.DNA.CombineGenes(fother.GetComponent<ChickensBrain>().DNA, mother.GetComponent<ChickensBrain>().DNA);
+        //}
+        //return offsetSpring;
     }
 
     private GameObject GetOffset(string tag)
@@ -293,37 +302,54 @@ public class GameManager
     /// </summary>
     public void BreedNewPopulation()
     {
-        // 먹이를 가장 많이 먹은 개체 위주로 번식 시킴
-        List<GameObject> sortedList = CurrGeneraionList.OrderByDescending(o => o.GetComponent<ChickensBrain>().feedsFound).ToList();
-        string feedCollected = $"Generation: {Generation}";
-        //foreach (GameObject g in sortedList)
-        //{
-        //    feedCollected += $", {g.GetComponent<ChickensBrain>().feedsFound}";
-        //}
-        Debug.Log("Feeds: " + feedCollected);
-        CurrGeneraionList.Clear();     // 기존 세대 제거
+        if (chickens.Count == 0) return;        // 교배할 닭이 없다면 종료
 
-        while (CurrGeneraionList.Count < beginPopulationSize)
+        // TODO: 먹이를 가장 많이 먹은 개체들만 번식 가능
+        List<GameObject> sortedList = chickens.OrderByDescending(x => x.GetComponent<ChickensBrain>().eatingCount).ToList();
+        string feedCollected = $"현재 세대: {Generation}";
+        foreach(GameObject chicken in sortedList)
         {
-            int bestParentCutoff = sortedList.Count / 4;    // 상위 25% 병아리만 부모로 선택
-            for (int i = 0; i < bestParentCutoff - 1; i++)
-            {
-                for (int j = 1; j < bestParentCutoff; j++)
-                {   // 상위 병아리들의 DNA를 교차 선택하여 번식을 진행
-                    CurrGeneraionList.Add(Breed(sortedList[i], sortedList[j]));
-                    if (CurrGeneraionList.Count == beginPopulationSize) break;
+            feedCollected += $", {chicken.GetComponentInParent<ChickensBrain>().eatingCount}";
+        }
+        Debug.Log($"먹이를 먹은 개수: {feedCollected}");
 
-                    CurrGeneraionList.Add(Breed(sortedList[j], sortedList[i]));
-                    if (CurrGeneraionList.Count == beginPopulationSize) break;
-                }
+        //CurrGeneraionList.Clear();     // 기존 세대 제거
+
+        int bestParentCutoff = sortedList.Count / 4;        // 상위 25% 닭만 부모로 선택됨
+        for (int i = 0; i < bestParentCutoff - 1; i++)
+        {
+            for (int j = 1; j < bestParentCutoff; j++)
+            {   // 상위 닭들의 DNA를 교차 선택하여 번식 진행
+                CurrGeneraionList.Add(Breed(sortedList[i], sortedList[j]));
+                if (CurrGeneraionList.Count == beginPopulationSize) break;
+
+                CurrGeneraionList.Add(Breed(sortedList[j], sortedList[i]));
                 if (CurrGeneraionList.Count == beginPopulationSize) break;
             }
+            if (CurrGeneraionList.Count == beginPopulationSize) break;
         }
 
-        for (int i = 0; i < sortedList.Count; i++)
-        {
-            Managers.Resource.Destroy(sortedList[i]);
-        }
+        //while (CurrGeneraionList.Count < beginPopulationSize)
+        //{
+        //    int bestParentCutoff = sortedList.Count / 4;    // 상위 25% 병아리만 부모로 선택
+        //    for (int i = 0; i < bestParentCutoff - 1; i++)
+        //    {
+        //        for (int j = 1; j < bestParentCutoff; j++)
+        //        {   // 상위 병아리들의 DNA를 교차 선택하여 번식을 진행
+        //            CurrGeneraionList.Add(Breed(sortedList[i], sortedList[j]));
+        //            if (CurrGeneraionList.Count == beginPopulationSize) break;
+
+        //            CurrGeneraionList.Add(Breed(sortedList[j], sortedList[i]));
+        //            if (CurrGeneraionList.Count == beginPopulationSize) break;
+        //        }
+        //        if (CurrGeneraionList.Count == beginPopulationSize) break;
+        //    }
+        //}
+
+        //for (int i = 0; i < sortedList.Count; i++)
+        //{
+        //    Managers.Resource.Destroy(sortedList[i]);
+        //}
         Generation++;
     }
 

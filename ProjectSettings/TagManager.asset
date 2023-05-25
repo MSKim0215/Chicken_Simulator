@@ -7,6 +7,7 @@ TagManager:
   - Feed
   - Chick
   - Chicken
+  - Egg
   layers:
   - Default
   - TransparentFX

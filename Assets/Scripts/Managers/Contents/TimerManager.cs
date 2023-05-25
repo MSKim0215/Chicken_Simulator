@@ -60,7 +60,7 @@ public class TimerManager
                     Managers.Game.Evolution();
                 }
 
-                //Managers.Game.BreedNewPopulation();
+                Managers.Game.BreedNewPopulation();
 
                 CurrentTimes = 0f;
             }

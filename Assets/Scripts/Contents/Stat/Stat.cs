@@ -52,8 +52,8 @@ public class Stat : MonoBehaviour
         if(chickenStat != null)
         {
             ChickensBrain brain = chickenStat.GetComponent<ChickensBrain>();
-            brain.feedsFound++;
-            brain.targetObj = null;
+            brain.eatingCount++;
+            brain.ClearTarget();
             chickenStat.NowExp += 1;
         }
         Managers.Game.Despawn(gameObject);

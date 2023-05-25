@@ -8,7 +8,7 @@ public class FeedDNA : RootDNA
 
     public FeedDNA()
     {
-        WorldObjectType = Define.WorldObject.Feed;
+        WorldObjectType = Define.WorldObject.NeutralGroup;
         SetRandomGenesCode();
     }
 

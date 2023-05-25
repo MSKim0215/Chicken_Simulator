@@ -14,6 +14,8 @@ public class FeedBrain : CharacterBrain
         DNA.SetStatus(GetComponent<FeedStat>());
     }
 
+    public void ClearDNA() => DNA = null;
+
     private void OnEnable()
     {
         Init();

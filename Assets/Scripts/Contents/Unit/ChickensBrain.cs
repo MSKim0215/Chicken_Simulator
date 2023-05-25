@@ -1,62 +1,57 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class ChickensBrain : CharacterBrain
+public class ChickensBrain : BehaviorBrain
 {
-    private FieldOfView sight;          // 시야각
+    private Define.ChickenType type;            // 종류
 
-    public int feedsFound = 0;
-
-    public ChickensDNA DNA { private set; get; }        // 유전자 DNA
-
+    public ChickensDNA DNA { private set; get; }            // 유전자 DNA
 
     public override void Init()
     {
-        sight = GetComponent<FieldOfView>();
+        base.Init();
+
+        switch(tag)
+        {
+            case "Egg": type = Define.ChickenType.Egg; break;
+            case "Chick": type = Define.ChickenType.Chick; break;
+            case "Chicken": type = Define.ChickenType.Chicken; break;
+        }
 
         DNA = new ChickensDNA();
-        switch(DNA.WorldObjectType)
-        {
-            case Define.WorldObject.Chick: DNA.SetStatus(GetComponent<ChickenStat>(), Define.ChickenType.Chick); break;
-            case Define.WorldObject.Chicken: DNA.SetStatus(GetComponent<ChickenStat>(), Define.ChickenType.Chicken); break;
-        }
-
-        if(GetComponentInChildren<UI_Hpbar>() == null)
-        {
-            Managers.UI.MakeWordSpaceUI<UI_Hpbar>(transform);
-        }
+        DNA.Init(GetComponent<ChickenStat>(), type);
     }
 
     protected override void UpdateIdle()
     {
-        if (sight != null && sight.FindClosetObject() != null)
-        {
-            targetObj = sight.FindClosetObject();
+        if (FOV == null) return;
+
+        if(FOV.FindClosetObject() != null)
+        {   // TODO: 시야 범위 안에 목표물이 있다면 이동 상태로 변경
+            Target = FOV.FindClosetObject();
             State = Define.CharacterState.Moving;
             return;
         }
 
-        if (Random.Range(0f, 1f) < 0.25f)
-        {
-            // TODO: 이동할 위치가 원 밖이면 반복
-            Vector3 randPos = transform.position + Random.insideUnitSphere * 1.5f;
-            randPos.y = 0f;
+        if(Random.Range(0, 101) < 25)
+        {   // TODO: 25% 확률로 자유 이동 실행
+            Vector3 randPosition = transform.position + Random.insideUnitSphere * 1.5f;
+            randPosition.y = 0f;
 
-            while (true)
+            while(true)
             {
-                Vector3 centerVec = randPos - Vector3.zero;
+                Vector3 centerVec = randPosition - Vector3.zero;
                 float centerDistance = centerVec.magnitude;
                 if (centerDistance > 5f)
                 {
-                    randPos = transform.position + Random.insideUnitSphere * 1.5f;
-                    randPos.y = 0f;
+                    randPosition = transform.position + Random.insideUnitSphere * 1.5f;
+                    randPosition.y = 0f;
                 }
                 else break;
             }
 
-            destPos = randPos;
+            destPosition = randPosition;
             State = Define.CharacterState.Moving;
             return;
         }
@@ -64,110 +59,58 @@ public class ChickensBrain : CharacterBrain
 
     protected override void UpdateMoving()
     {
-        if (targetObj != null)
-        {
-            destPos = targetObj.transform.position;
-            float distance = (destPos - transform.position).magnitude;
-            if (distance <= (float)DNA.StatusCode.Stats[StatType.EatRange])
+        if (Target != null)
+        {   // TODO: 목표물이 있는 이동일 경우
+            destPosition = Target.transform.position;
+            float distance = (destPosition - transform.position).magnitude;
+            if (distance <= (float)DNA.EatRange)
             {
-                if (targetObj.CompareTag("Feed"))
+                if (Target.CompareTag("Feed"))
                 {
                     State = Define.CharacterState.Eat;
-                    sight.DebugMode = false;
+                    FOV.DebugMode = false;
                     return;
                 }
             }
         }
 
-        Vector3 dir = destPos - transform.position;
+        Vector3 dir = destPosition - transform.position;
         dir.y = 0;
 
         if (dir.magnitude < 0.1f) State = Define.CharacterState.Idle;
         else
         {
-            float moveDist = Mathf.Clamp((float)DNA.StatusCode.Stats[StatType.MoveSpeed] * Time.deltaTime, 0, dir.magnitude);
+            float moveDist = Mathf.Clamp((float)DNA.MoveSpeed * Time.deltaTime, 0, dir.magnitude);
             transform.position += dir.normalized * moveDist;
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), 20 * Time.deltaTime);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), 20f * Time.deltaTime);
         }
     }
 
     protected override void UpdateEat()
     {
-        if (targetObj == null)
+        if (Target == null)
         {
             State = Define.CharacterState.Idle;
-            sight.DebugMode = true;
+            FOV.DebugMode = true;
             return;
         }
 
-        if (targetObj != null)
+        if (Target != null)
         {
-            Vector3 dir = targetObj.transform.position - transform.position;
+            Vector3 dir = Target.transform.position - transform.position;
             Quaternion quat = Quaternion.LookRotation(dir);
             transform.rotation = Quaternion.Lerp(transform.rotation, quat, 20f * Time.deltaTime);
         }
     }
 
-
-    //private void Update()
-    //{
-    //if(fov != null && fov.FindClosetObject() != null)
-    //{
-    //    transform.LookAt(fov.FindClosetObject().transform);
-    //}
-    //seeFeed = (false, false, false);
-    //bool left = false;
-    //bool front = false;
-    //bool right = false;
-    //canMove = true;
-
-    //RaycastHit hit;
-    //Debug.DrawRay(eyes.transform.position, eyes.transform.forward * 1f, Color.red);
-
-    //if(Physics.SphereCast(eyes.transform.position, 0.1f, eyes.transform.forward, out hit, 1f, ~ignore))
-    //{
-    //    if(hit.collider.gameObject.CompareTag("Feed"))
-    //    {
-    //        front = true;
-    //        canMove = false;
-    //    }
-    //}
-
-    //if (Physics.SphereCast(eyes.transform.position, 0.1f, eyes.transform.right, out hit, 1f, ~ignore))
-    //{
-    //    if (hit.collider.gameObject.CompareTag("Feed"))
-    //    {
-    //        right = true;
-    //    }
-    //}
-
-    //if (Physics.SphereCast(eyes.transform.position, 0.1f, -eyes.transform.right, out hit, 1f, ~ignore))
-    //{
-    //    if (hit.collider.gameObject.CompareTag("Feed"))
-    //    {
-    //        left = true;
-    //    }
-    //}
-    //seeFeed = (left, front, right);
-    //}
-
-    private void FixedUpdate()
-    {
-        //transform.Rotate(0, dna.genes[seeFeed], 0);
-        //if(canMove)
-        //{
-        //    transform.Translate(0f, 0f, 0.1f);
-        //}
-    }
-
     #region Event Callback
     private void OnEatEvent()
     {
-        if (targetObj != null)
+        if (Target != null)
         {
-            if (targetObj.CompareTag("Feed"))
+            if (Target.CompareTag("Feed"))
             {
-                FeedStat feedStat = targetObj.GetComponent<FeedStat>();
+                FeedStat feedStat = Target.GetComponent<FeedStat>();
                 feedStat.OnAttacked(DNA.StatusCode);
             }
         }
