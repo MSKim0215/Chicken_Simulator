@@ -6,55 +6,45 @@ using UnityEngine;
 namespace Data
 {
     [Serializable]
-    public class ChickenStat
+    public class BaseChickenLevelTable
     {
-        public int Level, ExpMax, HpMax, AttackPower, Defense;
+        public int Level, ExpMax;
+    }
+
+    [Serializable]
+    public class BaseChickenStat
+    {
+        public int Index, HpMax, EatPower, Defense;
         public float MoveSpeed, EatRange;
     }
 
     [Serializable]
-    public class ChickenStatData : ILoader<int, ChickenStat>
+    public class ChickenLevelTableData : ILoader<int, BaseChickenLevelTable>
     {
-        public List<ChickenStat> ChickenStats = new List<ChickenStat>();
+        public List<BaseChickenLevelTable> BaseChickenLevelTable = new List<BaseChickenLevelTable>();
 
-        public Dictionary<int, ChickenStat> MakeDict()
+        public Dictionary<int, BaseChickenLevelTable> MakeDict()
         {
-            Dictionary<int, ChickenStat> data = new Dictionary<int, ChickenStat>();
-            foreach(ChickenStat stat in ChickenStats)
+            Dictionary<int, BaseChickenLevelTable> data = new Dictionary<int, BaseChickenLevelTable>();
+            foreach (BaseChickenLevelTable table in BaseChickenLevelTable)
             {
-                data.Add(stat.Level, stat);
+                data.Add(table.Level, table);
             }
             return data;
         }
     }
 
     [Serializable]
-    public class ChickStatData : ILoader<int, ChickenStat>
+    public class ChickenStatData : ILoader<int, BaseChickenStat>
     {
-        public List<ChickenStat> ChickStats = new List<ChickenStat>();
+        public List<BaseChickenStat> BaseChickenStats = new List<BaseChickenStat>();
 
-        public Dictionary<int, ChickenStat> MakeDict()
+        public Dictionary<int, BaseChickenStat> MakeDict()
         {
-            Dictionary<int, ChickenStat> data = new Dictionary<int, ChickenStat>();
-            foreach (ChickenStat stat in ChickStats)
+            Dictionary<int, BaseChickenStat> data = new Dictionary<int, BaseChickenStat>();
+            foreach (BaseChickenStat stat in BaseChickenStats)
             {
-                data.Add(stat.Level, stat);
-            }
-            return data;
-        }
-    }
-
-    [Serializable]
-    public class EggStatData : ILoader<int, ChickenStat>
-    {
-        public List<ChickenStat> EggStats = new List<ChickenStat>();
-
-        public Dictionary<int, ChickenStat> MakeDict()
-        {
-            Dictionary<int, ChickenStat> data = new Dictionary<int, ChickenStat>();
-            foreach (ChickenStat stat in EggStats)
-            {
-                data.Add(stat.Level, stat);
+                data.Add(stat.Index, stat);
             }
             return data;
         }

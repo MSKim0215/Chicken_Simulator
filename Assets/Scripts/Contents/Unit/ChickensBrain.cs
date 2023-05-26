@@ -106,7 +106,7 @@ public class ChickensBrain : BehaviorBrain
 
     public bool CheckEvolutionAble()
     {
-        if (!Managers.Data.ChickenStatDict.TryGetValue(DNA.Level + 1, out _)) return true;
+        //if (!Managers.Data.ChickenStatDict.TryGetValue(DNA.Level + 1, out _)) return true;
         return false;
     }
 

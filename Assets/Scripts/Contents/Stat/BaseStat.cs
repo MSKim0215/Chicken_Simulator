@@ -8,7 +8,8 @@ public enum GenesStatType
     MoveSpeed,
     EatPower,
     EatRange,
-    Defense
+    Defense,
+    EndCount
 }
 
 public class BaseStat : MonoBehaviour
@@ -25,7 +26,7 @@ public class BaseStat : MonoBehaviour
 
     public virtual void OnAttacked(BaseStat attacker)
     {
-        int damage = Mathf.Max(0, (int)attacker.GenesStats[GenesStatType.EatPower] - (int)attacker.GenesStats[GenesStatType.Defense]);
+        int damage = Mathf.Max(0, (int)attacker.GenesStats[GenesStatType.EatPower] - (int)GenesStats[GenesStatType.Defense]);
         NowHp -= damage;
         if(NowHp <= 0)
         {

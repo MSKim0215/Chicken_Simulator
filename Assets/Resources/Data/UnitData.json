@@ -1,35 +1,18 @@
 {
-  "ChickStats": [
+  "BaseChickenLevelTable": [
     {
       "Level": "1",
-      "ExpMax": "0",
-      "HpMax": "5",
-      "MoveSpeed": "1f",
-      "AttackPower": "1",
+      "ExpMax": "5"
+    }
+  ],
+  "BaseChickenStats": [
+    {
+      "Index":  1,
+      "HpMax": "1",
+      "MoveSpeed": "0.8f",
+      "EatPower": "1",
       "EatRange": "0.13f",
       "Defense": "0"
-    }
-  ],
-  "ChickenStats": [
-    {
-      "Level": "1",
-      "ExpMax": "0",
-      "HpMax": "20",
-      "MoveSpeed": "1.2f",
-      "AttackPower": "5",
-      "EatRange": "0.15f",
-      "Defense": "1"
-    }
-  ],
-  "EggStats": [
-    {
-      "Level": "1",
-      "ExpMax": "0",
-      "HpMax": "5",
-      "MoveSpeed": "0f",
-      "AttackPower": "0",
-      "EatRange": "0",
-      "Defense": "3"
     }
   ]
 }

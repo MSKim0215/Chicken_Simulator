@@ -67,7 +67,7 @@ public class UI_UnitInfo : UI_Popup
     public void SetExpRatio(float ratio)
     {
         GetSlider((int)Sliders.Slider_Expbar).value = ratio;
-        Data.ChickenStat next = target.DNA.StatusCode.GetComponent<Data.ChickenStat>();
+        //Data.ChickenStat next = target.DNA.StatusCode.GetComponent<Data.ChickenStat>();
         //GetText((int)Texts.Text_Exp).text = $"{target.feedsFound}/{next.ExpMax}";
     }
 }
