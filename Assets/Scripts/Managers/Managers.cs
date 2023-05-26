@@ -81,8 +81,6 @@ public class Managers : MonoBehaviour
     private void Update()
     {
         Input.OnUpdate();
-        
-        Game.OnUpdate();
         Timer.OnUpdate();
     }
 

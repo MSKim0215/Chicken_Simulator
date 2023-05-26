@@ -15,6 +15,7 @@ public class ChickenStat : Stat
         get => nowExp; 
         set
         {
+            if (value == 0) return;     // 획득이 없으면 종료
             nowExp = value;
 
             // TODO: 레벨업 체크 로직
@@ -58,12 +59,25 @@ public class ChickenStat : Stat
 
         switch(this.type)
         {
+            case Define.ChickenType.Egg: SetEggStat(level); break;
             case Define.ChickenType.Chick: SetChickStat(level); break;
             case Define.ChickenType.Chicken: SetChickenStat(level); break;
         }
 
         HpMax = Hp;
         NowExp = 0;
+    }
+
+    private void SetEggStat(int level)
+    {
+        Stats.Add(StatType.Level, Managers.Data.EggStatDict[level].Level);
+        Stats.Add(StatType.ExpMax, Managers.Data.EggStatDict[level].ExpMax);
+
+        Stats.Add(StatType.Hp, Managers.Data.EggStatDict[level].HpMax);
+        Stats.Add(StatType.MoveSpeed, Managers.Data.EggStatDict[level].MoveSpeed);
+        Stats.Add(StatType.AttackPower, Managers.Data.EggStatDict[level].AttackPower);
+        Stats.Add(StatType.EatRange, Managers.Data.EggStatDict[level].EatRange);
+        Stats.Add(StatType.Defense, Managers.Data.EggStatDict[level].Defense);
     }
 
     private void SetChickStat(int level)

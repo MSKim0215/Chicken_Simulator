@@ -89,6 +89,30 @@ public class GameManager
         GameObject prefab = Managers.Resource.Instantiate(path, parent);
         switch (prefab.tag)
         {
+            case "Egg":
+                {
+                    if (!eggs.Contains(prefab))
+                    {
+                        prefab.transform.localPosition = dir;
+                        prefab.transform.rotation = eulr;
+                        eggs.Add(prefab);
+                        OnSpawnEvent?.Invoke(1);
+                    }
+                }
+                break;
+
+            case "Chick":
+                {
+                    if(!chicks.Contains(prefab))
+                    {
+                        prefab.transform.localPosition = dir;
+                        prefab.transform.rotation = eulr;
+                        chicks.Add(prefab);
+                        OnSpawnEvent?.Invoke(1);
+                    }
+                }
+                break;
+
             case "Chicken":
                 {
                     if (!chickens.Contains(prefab))
@@ -96,18 +120,6 @@ public class GameManager
                         prefab.transform.localPosition = dir;
                         prefab.transform.rotation = eulr;
                         chickens.Add(prefab);
-                        OnSpawnEvent?.Invoke(1);
-                    }
-                }
-                break;
-
-            case "Egg":
-                {
-                    if(!eggs.Contains(prefab))
-                    {
-                        prefab.transform.localPosition = dir;
-                        prefab.transform.rotation = eulr;
-                        eggs.Add(prefab);
                         OnSpawnEvent?.Invoke(1);
                     }
                 }
@@ -120,6 +132,16 @@ public class GameManager
     {
         switch(target.tag)
         {
+            case "Egg":
+                {
+                    if(eggs.Contains(target))
+                    {
+                        eggs.Remove(target);
+                        OnSpawnEvent?.Invoke(-1);
+                    }
+                }
+                break;
+
             case "Chick":
                 {
                     if (chicks.Contains(target))
@@ -153,45 +175,19 @@ public class GameManager
         Managers.Resource.Destroy(target);
     }
 
-    public void SpawnChick(int count)
-    {
-        for (int i = 0; i < count; i++)
-        {
-            GameObject chick = SpawnChick();
-            CurrGeneraionList.Add(chick);
-        }
-    }
-
-    private GameObject SpawnChick()
-    {
-        GameObject chick = Managers.Resource.Instantiate("Unit/Chick");
-        chick.transform.position = RandomSpawnPoint();
-        chick.transform.rotation = RandomSpawnRotate();
-        return chick;
-    }
-
-    public void SpawnChicken(int count)
-    {
-        for (int i = 0; i < count; i++)
-        {
-            GameObject chicken = SpawnChicken();
-            CurrGeneraionList.Add(chicken);
-        }
-    }
-
-    private GameObject SpawnChicken()
-    {
-        GameObject chicken = Managers.Resource.Instantiate("Unit/Chicken");
-        chicken.transform.position = RandomSpawnPoint();
-        chicken.transform.rotation = RandomSpawnRotate();
-        return chicken;
-    }
-
     public void Evolution()
     {
-        List<GameObject> chicks = GetEvolutionAble();
-        int count = chicks.Count;
-        if (count == 0) return;
+        if (chicks.Count == 0) return;      // 병아리가 없다면 종료
+
+        List<GameObject> evolutionList = chicks.ToList();       // 진화 대기조
+        foreach(GameObject chick in chicks)
+        {
+            ChickensBrain brain = chick.GetComponent<ChickensBrain>();
+            if (brain.CheckEvolutionAble()) evolutionList.Add(chick);
+        }
+
+        int count = evolutionList.Count;
+        if (count == 0) return;     // 진화 대기조가 없다면 종료
 
         GameObject chickenFlock = GameObject.Find("ChickenFlock");
         if (chickenFlock == null)
@@ -201,40 +197,13 @@ public class GameManager
 
         for (int i = 0; i < count; i++)
         {
-            Spawn("Unit/Chicken", chicks[i].transform.localPosition, chicks[i].transform.rotation, chickenFlock.transform);
+            Spawn("Unit/Chicken", evolutionList[i].transform.localPosition, evolutionList[i].transform.rotation, chickenFlock.transform);
         }
 
         for (int i = 0; i < count; i++)
         {
-            Despawn(chicks[i]);
+            Despawn(evolutionList[i]);
         }
-    }
-
-    private List<GameObject> GetEvolutionAble()
-    {
-        List<GameObject> result = new List<GameObject>();
-        foreach(GameObject chick in chicks)
-        {
-            ChickenStat stat = chick.GetComponent<ChickenStat>();
-            if(!Managers.Data.ChickStatDict.TryGetValue((int)stat.Stats[StatType.Level] + 1, out _))
-            {
-                Debug.Log("최대 레벨 달성");
-                result.Add(chick);
-            }
-        }
-        return result;
-    }
-
-    public void OnUpdate()
-    {
-        //elapsed += Time.deltaTime;
-        //if (elapsed >= trailTime)
-        //{
-        //    Debug.Log("끝남요");
-        //    BreedNewPopulation();
-        //    elapsed = 0;
-        //    SpawnFeed();
-        //}
     }
 
     /// <summary>
@@ -317,9 +286,28 @@ public class GameManager
     /// </summary>
     private GameObject Breed(GameObject fother, GameObject mother)
     {
-        GameObject child = Spawn("Unit/Egg", mother.transform.localPosition, mother.transform.rotation);
-        child.transform.localPosition = new Vector3(child.transform.localPosition.x, 0.1f, child.transform.localPosition.z);
-        return child;
+        ChickensBrain fotherBrain = fother.GetComponent<ChickensBrain>();
+        ChickensBrain motherBrain = mother.GetComponent<ChickensBrain>();
+
+        GameObject eggFlock = GameObject.Find("EggFlock");
+        if (eggFlock == null)
+        {
+            eggFlock = new GameObject { name = "EggFlock" };
+        }
+
+        GameObject egg = Spawn("Unit/Egg", mother.transform.localPosition, mother.transform.rotation, eggFlock.transform);
+        EggBrain brain = egg.GetComponent<EggBrain>();
+        brain.Init();
+
+        if(UnityEngine.Random.Range(0, 100) < 30)
+        {   // TODO: 돌연변이 발현, 30% 확률
+            Debug.Log("돌연변이 발생");
+        }
+        else
+        {   // TODO: 일반 병아리
+            brain.DNA.CombineStat(fotherBrain.DNA, motherBrain.DNA);
+        }
+        return egg;
 
         //GameObject offsetSpring = GetOffset(fother.tag);
         //ChickensBrain brain = offsetSpring.GetComponent<ChickensBrain>();
@@ -359,6 +347,45 @@ public class GameManager
         //    brain.DNA.CombineGenes(fother.GetComponent<ChickensBrain>().DNA, mother.GetComponent<ChickensBrain>().DNA);
         //}
         //return offsetSpring;
+    }
+
+    public void Hatch()
+    {
+        if (eggs.Count == 0) return;        // 알이 없다면 종료
+
+        List<GameObject> hatchList = new List<GameObject>();        // 부화 대기조
+        foreach(GameObject egg in eggs)
+        {
+            EggBrain brain = egg.GetComponent<EggBrain>();
+            if(brain.CheckHatchAble())
+            {   // 부화 가능하다면 부화 대기조로 이동
+                hatchList.Add(egg);
+            }
+            else
+            {   // 부화 불가능하다면 부화일 변동
+                brain.AddHatchCount();
+            }
+        }
+
+        int count = hatchList.Count;
+        if (count == 0) return;       // 부화 대기조가 없다면 종료
+
+        GameObject chickFlock = GameObject.Find("ChickFlock");
+        if (chickFlock == null)
+        {
+            chickFlock = new GameObject { name = "ChickFlock" };
+        }
+
+        for (int i = 0; i < count; i++)
+        {
+            Debug.Log(hatchList[i].transform.localPosition);
+            Spawn("Unit/Chick", hatchList[i].transform.localPosition, hatchList[i].transform.rotation, chickFlock.transform);
+        }
+
+        for (int i = 0; i < count; i++)
+        {
+            Despawn(hatchList[i]);
+        }
     }
 
     private Vector3 RandomSpawnPoint()

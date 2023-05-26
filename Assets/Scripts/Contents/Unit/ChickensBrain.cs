@@ -16,7 +16,6 @@ public class ChickensBrain : BehaviorBrain
 
         switch(tag)
         {
-            case "Egg": type = Define.ChickenType.Egg; break;
             case "Chick": type = Define.ChickenType.Chick; break;
             case "Chicken": type = Define.ChickenType.Chicken; break;
         }
@@ -103,6 +102,12 @@ public class ChickensBrain : BehaviorBrain
             Quaternion quat = Quaternion.LookRotation(dir);
             transform.rotation = Quaternion.Lerp(transform.rotation, quat, 20f * Time.deltaTime);
         }
+    }
+
+    public bool CheckEvolutionAble()
+    {
+        if (!Managers.Data.ChickenStatDict.TryGetValue(DNA.Level + 1, out _)) return true;
+        return false;
     }
 
     #region Event Callback
