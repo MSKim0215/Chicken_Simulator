@@ -179,7 +179,7 @@ public class GameManager
     {
         if (chicks.Count == 0) return;      // 병아리가 없다면 종료
 
-        List<GameObject> evolutionList = chicks.ToList();       // 진화 대기조
+        List<GameObject> evolutionList = new List<GameObject>();       // 진화 대기조
         foreach(GameObject chick in chicks)
         {
             ChickensBrain brain = chick.GetComponent<ChickensBrain>();
@@ -299,11 +299,11 @@ public class GameManager
         EggBrain brain = egg.GetComponent<EggBrain>();
         brain.Init();
 
-        if(UnityEngine.Random.Range(0, 100) < 30)
-        {   // TODO: 돌연변이 발현, 30% 확률
-            Debug.Log("돌연변이 발생");
-        }
-        else
+        //if(UnityEngine.Random.Range(0, 100) < 30)
+        //{   // TODO: 돌연변이 발현, 30% 확률
+        //    Debug.Log("돌연변이 발생");
+        //}
+        //else
         {   // TODO: 일반 병아리
             brain.DNA.CombineStat(fotherBrain.DNA, motherBrain.DNA);
         }

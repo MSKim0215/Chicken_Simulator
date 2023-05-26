@@ -10,12 +10,12 @@ public class UI_Hpbar : UI_Base
         Slider_Hpbar
     }
 
-    private Stat stat;
+    private BaseStat stat;
 
     public override void Init()
     {
         Bind<GameObject>(typeof(GameObjects));
-        stat = transform.parent.GetComponent<Stat>();
+        stat = transform.parent.GetComponent<BaseStat>();
     }
 
     private void Update()
@@ -24,7 +24,7 @@ public class UI_Hpbar : UI_Base
         transform.position = parent.position + Vector3.up * (parent.GetComponent<Collider>().bounds.size.y);
         transform.rotation = Camera.main.transform.rotation;
 
-        float ratio = (int)stat.Stats[StatType.Hp] / (float)stat.HpMax;
+        float ratio = (float)stat.NowHp / (int)stat.GenesStats[GenesStatType.HpMax];
         SetHpRatio(ratio);
     }
 

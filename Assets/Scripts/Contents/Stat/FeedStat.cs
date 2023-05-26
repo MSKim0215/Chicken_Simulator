@@ -2,18 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FeedStat : Stat
+public class FeedStat : BaseStat
 {
-    public override void Init(Define.ChickenType type = Define.ChickenType.None, int level = 1)
+    public void Init(Define.ChickenType type = Define.ChickenType.None, int level = 1)
     {
-        if (Stats.Count > 0) Stats.Clear();
+        if (GenesStats.Count > 0) GenesStats.Clear();
 
-        Stats.Add(StatType.Hp, 10);
-        Stats.Add(StatType.MoveSpeed, 0f);
-        Stats.Add(StatType.AttackPower, 0);
-        Stats.Add(StatType.EatRange, 0f);
-        Stats.Add(StatType.Defense, 0);
+        GenesStats.Add(GenesStatType.HpMax, 10);
+        GenesStats.Add(GenesStatType.MoveSpeed, 0f);
+        GenesStats.Add(GenesStatType.EatPower, 0);
+        GenesStats.Add(GenesStatType.EatRange, 0f);
+        GenesStats.Add(GenesStatType.Defense, 0);
 
-        HpMax = (int)Stats[StatType.Hp];
+        NowHp = (int)GenesStats[GenesStatType.HpMax];
     }
 }

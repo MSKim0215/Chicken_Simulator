@@ -3,12 +3,20 @@ using System.Collections.Generic;
 using UnityEditor.PackageManager;
 using UnityEngine;
 
-public class ChickenStat : Stat
+public enum NotGenesStatType
+{
+    Level,
+    ExpMax
+}
+
+public class ChickenStat : BaseStat
 {
     private Define.ChickenType type;
-    private int nowExp;
+    private int nowExp;     // 현재 경험치량
 
     public Data.ChickenStat nextStat;
+
+    public Dictionary<NotGenesStatType, object> NotGenesStats { private set; get; } = new Dictionary<NotGenesStatType, object>();   // 유전 불가능한 스탯
 
     public int NowExp 
     { 
@@ -43,64 +51,65 @@ public class ChickenStat : Stat
         }
     }
 
-    public int Level => (int)Stats[StatType.Level];
-    public int ExpMax => (int)Stats[StatType.ExpMax];
-    public int Hp => (int)Stats[StatType.Hp];
-    public float MoveSpeed => (float)Stats[StatType.MoveSpeed];
-    public int AttackPower => (int)Stats[StatType.AttackPower];
-    public float EatRange => (float)Stats[StatType.EatRange];
-    public int Defense => (int)Stats[StatType.Defense];
-
-    public override void Init(Define.ChickenType type = Define.ChickenType.None, int level = 1)
+    public void Init(Define.ChickenType type = Define.ChickenType.None, int level = 1)
     {
         this.type = type;
 
-        if (Stats.Count > 0) Stats.Clear();
+        if (GenesStats.Count > 0) GenesStats.Clear();
+        if (NotGenesStats.Count > 0) NotGenesStats.Clear();
 
-        switch(this.type)
+        switch (this.type)
         {
             case Define.ChickenType.Egg: SetEggStat(level); break;
             case Define.ChickenType.Chick: SetChickStat(level); break;
             case Define.ChickenType.Chicken: SetChickenStat(level); break;
         }
 
-        HpMax = Hp;
+        NowHp = HpMax;
         NowExp = 0;
     }
 
     private void SetEggStat(int level)
     {
-        Stats.Add(StatType.Level, Managers.Data.EggStatDict[level].Level);
-        Stats.Add(StatType.ExpMax, Managers.Data.EggStatDict[level].ExpMax);
+        NotGenesStats.Add(NotGenesStatType.Level, Managers.Data.EggStatDict[level].Level);
+        NotGenesStats.Add(NotGenesStatType.ExpMax, Managers.Data.EggStatDict[level].ExpMax);
 
-        Stats.Add(StatType.Hp, Managers.Data.EggStatDict[level].HpMax);
-        Stats.Add(StatType.MoveSpeed, Managers.Data.EggStatDict[level].MoveSpeed);
-        Stats.Add(StatType.AttackPower, Managers.Data.EggStatDict[level].AttackPower);
-        Stats.Add(StatType.EatRange, Managers.Data.EggStatDict[level].EatRange);
-        Stats.Add(StatType.Defense, Managers.Data.EggStatDict[level].Defense);
+        GenesStats.Add(GenesStatType.HpMax, Managers.Data.EggStatDict[level].HpMax);
+        GenesStats.Add(GenesStatType.MoveSpeed, Managers.Data.EggStatDict[level].MoveSpeed);
+        GenesStats.Add(GenesStatType.EatPower, Managers.Data.EggStatDict[level].AttackPower);
+        GenesStats.Add(GenesStatType.EatRange, Managers.Data.EggStatDict[level].EatRange);
+        GenesStats.Add(GenesStatType.Defense, Managers.Data.EggStatDict[level].Defense);
     }
 
     private void SetChickStat(int level)
     {
-        Stats.Add(StatType.Level, Managers.Data.ChickStatDict[level].Level);
-        Stats.Add(StatType.ExpMax, Managers.Data.ChickStatDict[level].ExpMax);
+        NotGenesStats.Add(NotGenesStatType.Level, Managers.Data.ChickStatDict[level].Level);
+        NotGenesStats.Add(NotGenesStatType.ExpMax, Managers.Data.ChickStatDict[level].ExpMax);
 
-        Stats.Add(StatType.Hp, Managers.Data.ChickStatDict[level].HpMax);
-        Stats.Add(StatType.MoveSpeed, Managers.Data.ChickStatDict[level].MoveSpeed);
-        Stats.Add(StatType.AttackPower, Managers.Data.ChickStatDict[level].AttackPower);
-        Stats.Add(StatType.EatRange, Managers.Data.ChickStatDict[level].EatRange);
-        Stats.Add(StatType.Defense, Managers.Data.ChickStatDict[level].Defense);
+        GenesStats.Add(GenesStatType.HpMax, Managers.Data.ChickStatDict[level].HpMax);
+        GenesStats.Add(GenesStatType.MoveSpeed, Managers.Data.ChickStatDict[level].MoveSpeed);
+        GenesStats.Add(GenesStatType.EatPower, Managers.Data.ChickStatDict[level].AttackPower);
+        GenesStats.Add(GenesStatType.EatRange, Managers.Data.ChickStatDict[level].EatRange);
+        GenesStats.Add(GenesStatType.Defense, Managers.Data.ChickStatDict[level].Defense);
     }
 
     private void SetChickenStat(int level)
     {
-        Stats.Add(StatType.Level, Managers.Data.ChickenStatDict[level].Level);
-        Stats.Add(StatType.ExpMax, Managers.Data.ChickenStatDict[level].ExpMax);
+        NotGenesStats.Add(NotGenesStatType.Level, Managers.Data.ChickenStatDict[level].Level);
+        NotGenesStats.Add(NotGenesStatType.ExpMax, Managers.Data.ChickenStatDict[level].ExpMax);
 
-        Stats.Add(StatType.Hp, Managers.Data.ChickenStatDict[level].HpMax);
-        Stats.Add(StatType.MoveSpeed, Managers.Data.ChickenStatDict[level].MoveSpeed);
-        Stats.Add(StatType.AttackPower, Managers.Data.ChickenStatDict[level].AttackPower);
-        Stats.Add(StatType.EatRange, Managers.Data.ChickenStatDict[level].EatRange);
-        Stats.Add(StatType.Defense, Managers.Data.ChickenStatDict[level].Defense);
+        GenesStats.Add(GenesStatType.HpMax, Managers.Data.ChickenStatDict[level].HpMax);
+        GenesStats.Add(GenesStatType.MoveSpeed, Managers.Data.ChickenStatDict[level].MoveSpeed);
+        GenesStats.Add(GenesStatType.EatPower, Managers.Data.ChickenStatDict[level].AttackPower);
+        GenesStats.Add(GenesStatType.EatRange, Managers.Data.ChickenStatDict[level].EatRange);
+        GenesStats.Add(GenesStatType.Defense, Managers.Data.ChickenStatDict[level].Defense);
     }
+
+    public int Level => (int)NotGenesStats[NotGenesStatType.Level];
+    public int ExpMax => (int)NotGenesStats[NotGenesStatType.ExpMax];
+    public int HpMax => (int)GenesStats[GenesStatType.HpMax];
+    public float MoveSpeed => (float)GenesStats[GenesStatType.MoveSpeed];
+    public int AttackPower => (int)GenesStats[GenesStatType.EatPower];
+    public float EatRange => (float)GenesStats[GenesStatType.EatRange];
+    public int Defense => (int)GenesStats[GenesStatType.Defense];
 }

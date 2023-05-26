@@ -43,8 +43,8 @@ public class UI_UnitInfo : UI_Popup
     {
         if (target == null) return;
 
-        float hpRatio = (int)target.DNA.StatusCode.Stats[StatType.Hp] / (float)target.DNA.StatusCode.HpMax;
-        SetHpRatio(hpRatio);
+        //float hpRatio = (int)target.DNA.StatusCode.GenesStats[StatType.Hp] / (float)target.DNA.StatusCode.HpMax;
+        //SetHpRatio(hpRatio);
 
         //Data.ChickenStat next = target.dna.stat.GetComponent<Data.ChickenStat>();
         //float expRatio = target.feedsFound / next.ExpMax;
@@ -54,14 +54,14 @@ public class UI_UnitInfo : UI_Popup
     private void RefreshUI()
     {
         GetText((int)Texts.Text_Name).text = target.DNA.StatusCode.gameObject.tag;
-        GetText((int)Texts.Text_Level).text = $"Lv.{target.DNA.StatusCode.Stats[StatType.Level]}";
+        //GetText((int)Texts.Text_Level).text = $"Lv.{target.DNA.StatusCode.GenesStats[StatType.Level]}";
         GetObject((int)GameObjects.Img_Mutant).SetActive(target.DNA.isMutant);
     }
 
     private void SetHpRatio(float ratio)
     {
         GetSlider((int)Sliders.Slider_Hpbar).value = ratio;
-        GetText((int)Texts.Text_Hp).text = $"{target.DNA.StatusCode.Stats[StatType.Hp]}/{target.DNA.StatusCode.HpMax}";
+        //GetText((int)Texts.Text_Hp).text = $"{target.DNA.StatusCode.GenesStats[StatType.Hp]}/{target.DNA.StatusCode.HpMax}";
     }
 
     public void SetExpRatio(float ratio)

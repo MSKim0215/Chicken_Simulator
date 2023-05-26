@@ -28,22 +28,45 @@ public class ChickensDNA : RootDNA
         dnaCodeLength = GenesCode.Count;
     }
 
-    public override void CombineStat(ChickensDNA dna1, ChickensDNA dna2)
+    public override void CombineGenes(ChickensDNA fotherDNA, ChickensDNA motherDNA)
     {
-        ChickenStat childStat = new ChickenStat();      // 자식 능력치 코드
-        for(int i = 0; i < Enum.GetValues(typeof(StatType)).Length; i++)
+        int index = 0;
+        Dictionary<DNAType, float> childGenes = new Dictionary<DNAType, float>();       // 자식 유전자 코드
+        foreach(KeyValuePair<DNAType, float> type in GenesCode)
         {
-            StatType type = (StatType)i;
-            if(UnityEngine.Random.Range(0f, 1f) < 0.5f)
+            if (index < dnaCodeLength / 2)
             {
+                childGenes.Add(type.Key, fotherDNA.GenesCode[type.Key]);
+            }
+            else
+            {
+                childGenes.Add(type.Key, motherDNA.GenesCode[type.Key]);
+            }
+            index++;
+        }
+        GenesCode = childGenes;
+    }
 
+    public override void CombineStat(ChickensDNA fotherDNA, ChickensDNA motherDNA)
+    {
+        int statLength = Enum.GetValues(typeof(GenesStatType)).Length;
+        for (int i = 0; i < statLength; i++)
+        {
+            GenesStatType type = (GenesStatType)i;
+            if(i < statLength / 2)
+            {   // dna 길이의 절반은 아버지 DNA 계승
+                StatusCode.GenesStats[type] = fotherDNA.StatusCode.GenesStats[type];
+            }
+            else
+            {   // dna 길이의 절반은 어머니 DNA 계승
+                StatusCode.GenesStats[type] = motherDNA.StatusCode.GenesStats[type];
             }
         }
     }
 
     public int Level => StatusCode.Level;
     public int ExpMax => StatusCode.ExpMax;
-    public int Hp => StatusCode.Hp;
+    public int Hp => StatusCode.HpMax;
     public float MoveSpeed => StatusCode.MoveSpeed;
     public int AttackPower => StatusCode.AttackPower;
     public float EatRange => StatusCode.EatRange;
