@@ -6,6 +6,8 @@ public class ChickensBrain : BehaviorBrain
 {
     private Define.ChickenType type;            // 종류
 
+    public bool isBreed = false;                // 번식 유무 체크 (세대가 변화하면 초기화)
+
     public ChickensDNA DNA { private set; get; }            // 유전자 DNA
 
     public override void Init()

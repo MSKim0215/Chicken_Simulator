@@ -43,7 +43,7 @@ public class TimerManager
     public void Init()
     {
         Meridiem = TimeMeridiem.AM;
-        changeTimes = 10f;
+        changeTimes = 5f;
     }
 
     public void OnUpdate()
@@ -57,10 +57,9 @@ public class TimerManager
                 else
                 {
                     Meridiem = TimeMeridiem.AM;
+                    Managers.Game.BreedNewPopulation();
                     Managers.Game.Evolution();
                 }
-
-                Managers.Game.BreedNewPopulation();
 
                 CurrentTimes = 0f;
             }

@@ -28,7 +28,7 @@ public class GameManager
 
     public void Init()
     {
-        beginPopulationSize = 25;
+        beginPopulationSize = 2;
         trailTime = 20f;
         timeScale = 2f;
 
@@ -238,6 +238,79 @@ public class GameManager
     }
 
     /// <summary>
+    /// 새로운 세대의 병아리를 번식 생성하는 함수
+    /// </summary>
+    public void BreedNewPopulation()
+    {
+        if (chickens.Count == 0) return;        // 교배할 닭이 없다면 종료
+
+        // TODO: 먹이를 가장 많이 먹은 개체들만 번식 가능
+        List<GameObject> sortedList = chickens.OrderByDescending(x => x.GetComponent<ChickensBrain>().eatingCount).ToList();
+        string feedCollected = $"현재 세대: {Generation}\n";
+        foreach(GameObject chicken in sortedList)
+        {
+            feedCollected += $"{chicken.GetComponentInParent<ChickensBrain>().eatingCount}, ";
+        }
+        Debug.Log($"먹이를 먹은 개수: {feedCollected}");
+
+        //CurrGeneraionList.Clear();     // 기존 세대 제거
+
+        int bestParentCutoff = (sortedList.Count / 4 < 2) ? 2 : sortedList.Count / 4;  // 상위 25% 닭만 부모로 선택됨
+        Debug.Log($"번식 가능 닭: {bestParentCutoff}");
+        for (int i = 0; i < bestParentCutoff - 1; i++)
+        {
+            for (int j = i + 1; j < bestParentCutoff; j++)
+            {   // 상위 닭들의 DNA를 교차 선택하여 번식 진행
+                ChickensBrain fother = sortedList[i].GetComponent<ChickensBrain>();
+                ChickensBrain mother = sortedList[j].GetComponent<ChickensBrain>();
+
+                if(!fother.isBreed && !mother.isBreed)
+                {   // 번식하지 않은 한쌍이면 실행
+                    if(UnityEngine.Random.Range(0, 101) < 50)
+                    {   // 50% 확률로 아버지 닭 전면부 유전자 코드 부여
+                        CurrGeneraionList.Add(Breed(sortedList[i], sortedList[j]));
+                    }
+                    else
+                    {   // 50% 확률로 어머니 닭 전면부 유전자 코드 부여
+                        CurrGeneraionList.Add(Breed(sortedList[j], sortedList[i]));
+                    }
+                    fother.isBreed = true;
+                    mother.isBreed = true;
+                }
+            }
+        }
+
+        for(int i = 0; i < sortedList.Count; i++)
+        {
+            sortedList[i].GetComponent<ChickensBrain>().isBreed = false;
+        }
+
+
+        //while (CurrGeneraionList.Count < beginPopulationSize)
+        //{
+        //    int bestParentCutoff = sortedList.Count / 4;    // 상위 25% 병아리만 부모로 선택
+        //    for (int i = 0; i < bestParentCutoff - 1; i++)
+        //    {
+        //        for (int j = 1; j < bestParentCutoff; j++)
+        //        {   // 상위 병아리들의 DNA를 교차 선택하여 번식을 진행
+        //            CurrGeneraionList.Add(Breed(sortedList[i], sortedList[j]));
+        //            if (CurrGeneraionList.Count == beginPopulationSize) break;
+
+        //            CurrGeneraionList.Add(Breed(sortedList[j], sortedList[i]));
+        //            if (CurrGeneraionList.Count == beginPopulationSize) break;
+        //        }
+        //        if (CurrGeneraionList.Count == beginPopulationSize) break;
+        //    }
+        //}
+
+        //for (int i = 0; i < sortedList.Count; i++)
+        //{
+        //    Managers.Resource.Destroy(sortedList[i]);
+        //}
+        Generation++;
+    }
+
+    /// <summary>
     /// 자식을 생성하는 함수
     /// fother: 아빠
     /// mother: 엄마
@@ -245,6 +318,7 @@ public class GameManager
     private GameObject Breed(GameObject fother, GameObject mother)
     {
         GameObject child = Spawn("Unit/Egg", mother.transform.localPosition, mother.transform.rotation);
+        child.transform.localPosition = new Vector3(child.transform.localPosition.x, 0.1f, child.transform.localPosition.z);
         return child;
 
         //GameObject offsetSpring = GetOffset(fother.tag);
@@ -277,7 +351,7 @@ public class GameManager
         //            }
         //            break;
         //    }
-            
+
         //    Debug.LogWarning($"뮤턴트 발생! {offsetSpring.name + offsetSpring.transform.GetSiblingIndex()}");
         //}
         //else
@@ -285,72 +359,6 @@ public class GameManager
         //    brain.DNA.CombineGenes(fother.GetComponent<ChickensBrain>().DNA, mother.GetComponent<ChickensBrain>().DNA);
         //}
         //return offsetSpring;
-    }
-
-    private GameObject GetOffset(string tag)
-    {
-        switch (tag)
-        {
-            case "Chick": return SpawnChick();
-            case "Chicken": return SpawnChicken();
-        }
-        return null;
-    }
-
-    /// <summary>
-    /// 새로운 세대의 병아리를 번식 생성하는 함수
-    /// </summary>
-    public void BreedNewPopulation()
-    {
-        if (chickens.Count == 0) return;        // 교배할 닭이 없다면 종료
-
-        // TODO: 먹이를 가장 많이 먹은 개체들만 번식 가능
-        List<GameObject> sortedList = chickens.OrderByDescending(x => x.GetComponent<ChickensBrain>().eatingCount).ToList();
-        string feedCollected = $"현재 세대: {Generation}";
-        foreach(GameObject chicken in sortedList)
-        {
-            feedCollected += $", {chicken.GetComponentInParent<ChickensBrain>().eatingCount}";
-        }
-        Debug.Log($"먹이를 먹은 개수: {feedCollected}");
-
-        //CurrGeneraionList.Clear();     // 기존 세대 제거
-
-        int bestParentCutoff = sortedList.Count / 4;        // 상위 25% 닭만 부모로 선택됨
-        for (int i = 0; i < bestParentCutoff - 1; i++)
-        {
-            for (int j = 1; j < bestParentCutoff; j++)
-            {   // 상위 닭들의 DNA를 교차 선택하여 번식 진행
-                CurrGeneraionList.Add(Breed(sortedList[i], sortedList[j]));
-                if (CurrGeneraionList.Count == beginPopulationSize) break;
-
-                CurrGeneraionList.Add(Breed(sortedList[j], sortedList[i]));
-                if (CurrGeneraionList.Count == beginPopulationSize) break;
-            }
-            if (CurrGeneraionList.Count == beginPopulationSize) break;
-        }
-
-        //while (CurrGeneraionList.Count < beginPopulationSize)
-        //{
-        //    int bestParentCutoff = sortedList.Count / 4;    // 상위 25% 병아리만 부모로 선택
-        //    for (int i = 0; i < bestParentCutoff - 1; i++)
-        //    {
-        //        for (int j = 1; j < bestParentCutoff; j++)
-        //        {   // 상위 병아리들의 DNA를 교차 선택하여 번식을 진행
-        //            CurrGeneraionList.Add(Breed(sortedList[i], sortedList[j]));
-        //            if (CurrGeneraionList.Count == beginPopulationSize) break;
-
-        //            CurrGeneraionList.Add(Breed(sortedList[j], sortedList[i]));
-        //            if (CurrGeneraionList.Count == beginPopulationSize) break;
-        //        }
-        //        if (CurrGeneraionList.Count == beginPopulationSize) break;
-        //    }
-        //}
-
-        //for (int i = 0; i < sortedList.Count; i++)
-        //{
-        //    Managers.Resource.Destroy(sortedList[i]);
-        //}
-        Generation++;
     }
 
     private Vector3 RandomSpawnPoint()
