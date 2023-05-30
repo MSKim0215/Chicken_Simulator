@@ -524,7 +524,7 @@ GameObject:
   - component: {fileID: 6698761223265397430}
   - component: {fileID: 3770895973275844944}
   - component: {fileID: 4431889367201907006}
-  - component: {fileID: 427252909}
+  - component: {fileID: -4646352995728655676}
   - component: {fileID: -1703366399027618817}
   m_Layer: 6
   m_Name: Chick
@@ -599,6 +599,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11180a141a0018a4198fefe2d79dc1f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  state: 0
+  eatingCount: 0
+  isBreed: 0
 --- !u!114 &4431889367201907006
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -621,7 +624,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   height: 0.2
---- !u!114 &427252909
+--- !u!114 &-4646352995728655676
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -633,14 +636,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da6f33b7bba459c438df1fb35f2b027e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextStat:
-    Level: 0
-    ExpMax: 0
-    HpMax: 0
-    AttackPower: 0
-    Defense: 0
-    MoveSpeed: 0
-    EatRange: 0
 --- !u!114 &-1703366399027618817
 MonoBehaviour:
   m_ObjectHideFlags: 0
