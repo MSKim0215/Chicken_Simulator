@@ -17,6 +17,11 @@ public class ChickensDNA : RootDNA
         SetRandomGenesCode();
     }
 
+    public void Init(ChickenStat stat)
+    {
+        StatusCode.Init(stat);
+    }
+
     protected override void SetRandomGenesCode()
     {
         base.SetRandomGenesCode();
@@ -49,7 +54,7 @@ public class ChickensDNA : RootDNA
 
     public override void CombineStat(ChickensDNA fotherDNA, ChickensDNA motherDNA)
     {
-        int statLength = Enum.GetValues(typeof(GenesStatType)).Length;
+        int statLength = Enum.GetValues(typeof(GenesStatType)).Length - 1;
         for (int i = 0; i < statLength; i++)
         {
             GenesStatType type = (GenesStatType)i;
@@ -64,6 +69,7 @@ public class ChickensDNA : RootDNA
         }
     }
 
+    public Define.ChickenType Type => StatusCode.Type;
     public int Level => StatusCode.Level;
     public int ExpMax => StatusCode.ExpMax;
     public int Hp => StatusCode.HpMax;

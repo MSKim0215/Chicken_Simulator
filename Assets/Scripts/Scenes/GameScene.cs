@@ -34,7 +34,7 @@ public class GameScene : BaseScene
 
         for(int i = 0; i < Managers.Game.BeginPopulationSize; i++)
         {
-            Managers.Game.Spawn("Unit/Chick", chickFlock.transform);
+            Managers.Game.Spawn("Unit/Chick", chickFlock.transform).GetComponent<ChickensBrain>().MakeDNA();
         }
 
         GameObject spawner = GameObject.Find("FeedSpawner");

@@ -58,4 +58,6 @@ public class Define
     {
         AM = 15, PM = 30
     }
+
+    public const int TableLabel = 1;
 }

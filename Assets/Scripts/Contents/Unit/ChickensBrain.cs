@@ -4,24 +4,34 @@ using UnityEngine;
 
 public class ChickensBrain : BehaviorBrain
 {
-    private Define.ChickenType type;            // 종류
-
     public bool isBreed = false;                // 번식 유무 체크 (세대가 변화하면 초기화)
 
     public ChickensDNA DNA { private set; get; }            // 유전자 DNA
 
-    public override void Init()
+    /// <summary>
+    /// 신규 DNA 생성
+    /// </summary>
+    public void MakeDNA()
     {
-        base.Init();
-
+        Define.ChickenType tempType = Define.ChickenType.None;
         switch(tag)
         {
-            case "Chick": type = Define.ChickenType.Chick; break;
-            case "Chicken": type = Define.ChickenType.Chicken; break;
+            case "Chick": tempType = Define.ChickenType.Chick; break;
+            case "Chicken": tempType = Define.ChickenType.Chicken; break;
         }
 
         DNA = new ChickensDNA();
-        DNA.Init(GetComponent<ChickenStat>(), type);
+        DNA.Init(GetComponent<ChickenStat>(), tempType);
+    }
+
+    /// <summary>
+    /// 기존 DNA 복사
+    /// </summary>
+    public void CopyDNA(ChickensDNA targetDNA)
+    {
+        if (DNA == null) return;
+
+        DNA.Init(targetDNA.StatusCode);
     }
 
     protected override void UpdateIdle()
@@ -106,7 +116,7 @@ public class ChickensBrain : BehaviorBrain
 
     public bool CheckEvolutionAble()
     {
-        //if (!Managers.Data.ChickenStatDict.TryGetValue(DNA.Level + 1, out _)) return true;
+        if (DNA.Level >= Managers.Data.ChickenGroupLevelTable[Define.TableLabel].ChickGrowMax) return true;
         return false;
     }
 

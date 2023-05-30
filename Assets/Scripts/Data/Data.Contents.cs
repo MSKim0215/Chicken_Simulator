@@ -8,7 +8,7 @@ namespace Data
     [Serializable]
     public class BaseChickenLevelTable
     {
-        public int Level, ExpMax;
+        public int Level, ExpMax, ChickGrowMax;
     }
 
     [Serializable]

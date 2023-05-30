@@ -197,7 +197,9 @@ public class GameManager
 
         for (int i = 0; i < count; i++)
         {
-            Spawn("Unit/Chicken", evolutionList[i].transform.localPosition, evolutionList[i].transform.rotation, chickenFlock.transform);
+            ChickensBrain newBrain = Spawn("Unit/Chicken", evolutionList[i].transform.localPosition, evolutionList[i].transform.rotation, chickenFlock.transform).GetComponent<ChickensBrain>();
+            newBrain.MakeDNA();
+            newBrain.CopyDNA(evolutionList[i].GetComponent<ChickensBrain>().DNA);
         }
 
         for (int i = 0; i < count; i++)
@@ -211,7 +213,7 @@ public class GameManager
     /// </summary>
     public void BreedNewPopulation()
     {
-        if (chickens.Count == 0) return;        // 교배할 닭이 없다면 종료
+        if (chickens.Count < 2) return;        // 교배할 닭이 없다면 종료
 
         // TODO: 먹이를 가장 많이 먹은 개체들만 번식 가능
         List<GameObject> sortedList = chickens.OrderByDescending(x => x.GetComponent<ChickensBrain>().eatingCount).ToList();
@@ -225,7 +227,7 @@ public class GameManager
         //CurrGeneraionList.Clear();     // 기존 세대 제거
 
         int bestParentCutoff = (sortedList.Count / 4 < 2) ? 2 : sortedList.Count / 4;  // 상위 25% 닭만 부모로 선택됨
-        Debug.Log($"번식 가능 닭: {bestParentCutoff}");
+        Debug.Log($"번식 가능 닭: {bestParentCutoff}");  
         for (int i = 0; i < bestParentCutoff - 1; i++)
         {
             for (int j = i + 1; j < bestParentCutoff; j++)
@@ -298,6 +300,7 @@ public class GameManager
         GameObject egg = Spawn("Unit/Egg", mother.transform.localPosition, mother.transform.rotation, eggFlock.transform);
         EggBrain brain = egg.GetComponent<EggBrain>();
         brain.Init();
+        brain.MakeDNA();
 
         //if(UnityEngine.Random.Range(0, 100) < 30)
         //{   // TODO: 돌연변이 발현, 30% 확률
@@ -378,8 +381,9 @@ public class GameManager
 
         for (int i = 0; i < count; i++)
         {
-            Debug.Log(hatchList[i].transform.localPosition);
-            Spawn("Unit/Chick", hatchList[i].transform.localPosition, hatchList[i].transform.rotation, chickFlock.transform);
+            ChickensBrain newBrain = Spawn("Unit/Chick", hatchList[i].transform.localPosition, hatchList[i].transform.rotation, chickFlock.transform).GetComponent<ChickensBrain>();
+            newBrain.MakeDNA();
+            newBrain.CopyDNA(hatchList[i].GetComponent<EggBrain>().DNA);
         }
 
         for (int i = 0; i < count; i++)

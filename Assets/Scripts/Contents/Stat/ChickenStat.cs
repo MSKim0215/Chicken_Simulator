@@ -31,7 +31,7 @@ public class ChickenStat : BaseStat
             {
                 if(type == Define.ChickenType.Chick)
                 {   // TODO: 병아리는 최대 레벨 5
-                    if (level >= 5) break;
+                    if (level >= 2) break;
                     if (nowExp < expMax) break;
                 }
                 else if(type == Define.ChickenType.Chicken)
@@ -72,26 +72,43 @@ public class ChickenStat : BaseStat
         }
     }
 
-    public void Init(Define.ChickenType type = Define.ChickenType.None, int level = 1)
+    /// <summary>
+    /// 새로운 스탯 부여 함수
+    /// type: 타입
+    /// </summary>
+    public void Init(Define.ChickenType type = Define.ChickenType.None)
     {
         this.type = type;
 
         if (GenesStats.Count > 0) GenesStats.Clear();
         if (NotGenesStats.Count > 0) NotGenesStats.Clear();
 
-        NotGenesStats.Add(NotGenesStatType.Level, Managers.Data.ChickenGroupLevelTable[level].Level);
-        NotGenesStats.Add(NotGenesStatType.ExpMax, Managers.Data.ChickenGroupLevelTable[level].ExpMax);
+        NotGenesStats.Add(NotGenesStatType.Level, Managers.Data.ChickenGroupLevelTable[Define.TableLabel].Level);
+        NotGenesStats.Add(NotGenesStatType.ExpMax, Managers.Data.ChickenGroupLevelTable[Define.TableLabel].ExpMax);
 
-        GenesStats.Add(GenesStatType.HpMax, Managers.Data.ChickenGroupStat[level].HpMax);
-        GenesStats.Add(GenesStatType.MoveSpeed, Managers.Data.ChickenGroupStat[level].MoveSpeed);
-        GenesStats.Add(GenesStatType.EatPower, Managers.Data.ChickenGroupStat[level].EatPower);
-        GenesStats.Add(GenesStatType.EatRange, Managers.Data.ChickenGroupStat[level].EatRange);
-        GenesStats.Add(GenesStatType.Defense, Managers.Data.ChickenGroupStat[level].Defense);
+        GenesStats.Add(GenesStatType.HpMax, Managers.Data.ChickenGroupStat[Define.TableLabel].HpMax);
+        GenesStats.Add(GenesStatType.MoveSpeed, Managers.Data.ChickenGroupStat[Define.TableLabel].MoveSpeed);
+        GenesStats.Add(GenesStatType.EatPower, Managers.Data.ChickenGroupStat[Define.TableLabel].EatPower);
+        GenesStats.Add(GenesStatType.EatRange, Managers.Data.ChickenGroupStat[Define.TableLabel].EatRange);
+        GenesStats.Add(GenesStatType.Defense, Managers.Data.ChickenGroupStat[Define.TableLabel].Defense);
 
         NowHp = HpMax;
         NowExp = 0;
     }
 
+    public void Init(ChickenStat stat)
+    {
+        NotGenesStats[NotGenesStatType.Level] = stat.Level;
+        NotGenesStats[NotGenesStatType.ExpMax] = stat.ExpMax;
+
+        GenesStats[GenesStatType.HpMax] = stat.HpMax;
+        GenesStats[GenesStatType.MoveSpeed] = stat.MoveSpeed;
+        GenesStats[GenesStatType.EatPower] = stat.AttackPower;
+        GenesStats[GenesStatType.EatRange] = stat.EatRange;
+        GenesStats[GenesStatType.Defense] = stat.Defense;
+    }
+
+    public Define.ChickenType Type => type;
     public int Level => (int)NotGenesStats[NotGenesStatType.Level];
     public int ExpMax => (int)NotGenesStats[NotGenesStatType.ExpMax];
     public int HpMax => (int)GenesStats[GenesStatType.HpMax];

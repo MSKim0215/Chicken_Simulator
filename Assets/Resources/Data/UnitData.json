@@ -2,7 +2,8 @@
   "BaseChickenLevelTable": [
     {
       "Level": "1",
-      "ExpMax": "5"
+      "ExpMax": "1",
+      "ChickGrowMax":  "2"
     }
   ],
   "BaseChickenStats": [

@@ -18,9 +18,9 @@ public class DataManager
         ChickenGroupStat = LoadJson<Data.ChickenStatData, int, Data.BaseChickenStat>("UnitData").MakeDict();
     }
 
-    private Loader LoadJson<Loader, Key, Value>(string _path) where Loader: ILoader<Key,Value>
+    private Loader LoadJson<Loader, Key, Value>(string path) where Loader: ILoader<Key,Value>
     {
-        TextAsset file = Managers.Resource.Load<TextAsset>($"Data/{_path}");
+        TextAsset file = Managers.Resource.Load<TextAsset>($"Data/{path}");
         return JsonUtility.FromJson<Loader>(file.text);
     }
 }
