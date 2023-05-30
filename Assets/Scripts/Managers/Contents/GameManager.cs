@@ -20,7 +20,8 @@ public class GameManager
     private HashSet<GameObject> chicks = new HashSet<GameObject>();     // 병아리 집합
     private HashSet<GameObject> chickens = new HashSet<GameObject>();   // 닭 집합
     private HashSet<GameObject> feeds = new HashSet<GameObject>();      // 먹이 집합
-    
+
+    private Dictionary<bool, Material> eggMaterials = new Dictionary<bool, Material>();     // 돌연변이, 일반 알 머티리얼
     private Dictionary<bool, Material> chickMaterials = new Dictionary<bool, Material>();   // 돌연변이, 일반 병아리 머티리얼
     private Dictionary<bool, Material> chickenMaterials = new Dictionary<bool, Material>(); // 돌연변이, 일반 닭 머티리얼
 
@@ -31,6 +32,9 @@ public class GameManager
         beginPopulationSize = 2;
         trailTime = 20f;
         timeScale = 2f;
+
+        eggMaterials.Add(true, Managers.Resource.Load<Material>("Materials/Mutant Egg"));
+        eggMaterials.Add(false, Managers.Resource.Load<Material>("Materials/Normal Egg"));
 
         chickMaterials.Add(true, Managers.Resource.Load<Material>("Materials/Mutant Chick"));
         chickMaterials.Add(false, Managers.Resource.Load<Material>("Materials/Normal Chick"));
@@ -302,11 +306,20 @@ public class GameManager
         brain.Init();
         brain.MakeDNA();
 
-        //if(UnityEngine.Random.Range(0, 100) < 30)
-        //{   // TODO: 돌연변이 발현, 30% 확률
-        //    Debug.Log("돌연변이 발생");
-        //}
-        //else
+        if (UnityEngine.Random.Range(0, 100) < 30)
+        {   // TODO: 돌연변이 발현, 30% 확률
+            Debug.Log("돌연변이 발생");
+
+            brain.DNA.isMutant = true;
+
+            MeshRenderer render = egg.GetComponent<MeshRenderer>();
+            Material[] mats = render.materials;
+            mats[0] = eggMaterials[brain.DNA.isMutant];
+            render.materials = mats;
+
+            brain.DNA.CombineStat(fotherBrain.DNA, motherBrain.DNA, 2f);
+        }
+        else
         {   // TODO: 일반 병아리
             brain.DNA.CombineStat(fotherBrain.DNA, motherBrain.DNA);
         }

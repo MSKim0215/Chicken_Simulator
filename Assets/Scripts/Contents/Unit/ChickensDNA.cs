@@ -52,7 +52,7 @@ public class ChickensDNA : RootDNA
         GenesCode = childGenes;
     }
 
-    public override void CombineStat(ChickensDNA fotherDNA, ChickensDNA motherDNA)
+    public override void CombineStat(ChickensDNA fotherDNA, ChickensDNA motherDNA, float statValue = 1f)
     {
         int statLength = Enum.GetValues(typeof(GenesStatType)).Length - 1;
         for (int i = 0; i < statLength; i++)
@@ -60,11 +60,27 @@ public class ChickensDNA : RootDNA
             GenesStatType type = (GenesStatType)i;
             if(i < statLength / 2)
             {   // dna 길이의 절반은 아버지 DNA 계승
-                StatusCode.GenesStats[type] = fotherDNA.StatusCode.GenesStats[type];
+                object tempStat = fotherDNA.StatusCode.GenesStats[type];
+                if(tempStat is int)
+                {
+                    StatusCode.GenesStats[type] = (int)((int)tempStat * statValue);
+                }
+                else if(tempStat is float)
+                {
+                    StatusCode.GenesStats[type] = (float)tempStat * statValue;
+                }
             }
             else
             {   // dna 길이의 절반은 어머니 DNA 계승
-                StatusCode.GenesStats[type] = motherDNA.StatusCode.GenesStats[type];
+                object tempStat = motherDNA.StatusCode.GenesStats[type];
+                if(tempStat is int)
+                {
+                    StatusCode.GenesStats[type] = (int)((int)tempStat * statValue);
+                }
+                else if(tempStat is float)
+                {
+                    StatusCode.GenesStats[type] = (float)tempStat * statValue;
+                }
             }
         }
     }

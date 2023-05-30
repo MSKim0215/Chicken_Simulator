@@ -49,7 +49,7 @@ public class RootDNA
         //GenesCode = newGenes;
     }
 
-    public virtual void CombineStat(ChickensDNA dna1, ChickensDNA dna2)
+    public virtual void CombineStat(ChickensDNA dna1, ChickensDNA dna2, float statValue = 1f)
     {
         //Stat newStat = new Stat();      // »õ·Î¿î ½ºÅÈ
         //for (int i = 0; i < Enum.GetValues(typeof(StatType)).Length; i++)
