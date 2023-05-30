@@ -203,7 +203,7 @@ public class GameManager
         {
             ChickensBrain newBrain = Spawn("Unit/Chicken", evolutionList[i].transform.localPosition, evolutionList[i].transform.rotation, chickenFlock.transform).GetComponent<ChickensBrain>();
             newBrain.MakeDNA();
-            newBrain.CopyDNA(evolutionList[i].GetComponent<ChickensBrain>().DNA);
+            newBrain.State = Define.CharacterState.Idle;
 
             ChickensBrain beforeBrain = evolutionList[i].GetComponent<ChickensBrain>();
             newBrain.CopyDNA(beforeBrain.DNA);
@@ -214,7 +214,7 @@ public class GameManager
 
                 SkinnedMeshRenderer skin = newBrain.transform.Find("Toon Chicken").GetComponent<SkinnedMeshRenderer>();
                 Material[] mats = skin.materials;
-                mats[0] = chickMaterials[beforeBrain.DNA.isMutant];
+                mats[0] = chickenMaterials[beforeBrain.DNA.isMutant];
                 skin.materials = mats;
             }
         }
@@ -409,6 +409,7 @@ public class GameManager
         {
             ChickensBrain newBrain = Spawn("Unit/Chick", hatchList[i].transform.localPosition, hatchList[i].transform.rotation, chickFlock.transform).GetComponent<ChickensBrain>();
             newBrain.MakeDNA();
+            newBrain.State = Define.CharacterState.Idle;
 
             EggBrain eggBrain = hatchList[i].GetComponent<EggBrain>();
             newBrain.CopyDNA(eggBrain.DNA);

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ChickensBrain : BehaviorBrain
 {
+    private bool isDelay = false;               // 딜레이 상태 유무 체크
     public bool isBreed = false;                // 번식 유무 체크 (세대가 변화하면 초기화)
 
     public ChickensDNA DNA { private set; get; }            // 유전자 DNA
@@ -36,6 +37,7 @@ public class ChickensBrain : BehaviorBrain
 
     protected override void UpdateIdle()
     {
+        if (isDelay) return;
         if (FOV == null) return;
 
         if(FOV.FindClosetObject() != null)
@@ -45,8 +47,8 @@ public class ChickensBrain : BehaviorBrain
             return;
         }
 
-        if(Random.Range(0, 101) < 25)
-        {   // TODO: 25% 확률로 자유 이동 실행
+        if(Random.Range(0, 101) < 50)
+        {   // TODO: 50% 확률로 자유 이동 실행
             Vector3 randPosition = transform.position + Random.insideUnitSphere * 1.5f;
             randPosition.y = 0f;
 
@@ -66,6 +68,20 @@ public class ChickensBrain : BehaviorBrain
             State = Define.CharacterState.Moving;
             return;
         }
+        else
+        {
+            if (!isDelay)
+            {
+                StartCoroutine(DelayTime());
+            }
+        }
+    }
+
+    private IEnumerator DelayTime()
+    {
+        isDelay = true;
+        yield return new WaitForSeconds(1f);
+        isDelay = false;
     }
 
     protected override void UpdateMoving()

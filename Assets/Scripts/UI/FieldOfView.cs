@@ -47,7 +47,7 @@ public class FieldOfView : MonoBehaviour
             Vector3 targetDir = (closestPoint - myPos).normalized;
             float targetAngle = Mathf.Abs(Mathf.DeltaAngle(Vector3.Angle(lookDir, targetDir), 0f));
 
-            if (targetAngle <= ViewAngle && !Physics.Raycast(myPos, targetDir, ViewRadius, ObstacleMask))
+            if (targetAngle <= ViewAngle * 0.5f && !Physics.Raycast(myPos, targetDir, ViewRadius, ObstacleMask))
             {
                 targetList.Add(target);
                 if (debugMode) Debug.DrawLine(myPos, closestPoint, Color.red);
