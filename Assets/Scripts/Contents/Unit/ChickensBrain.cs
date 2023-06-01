@@ -37,44 +37,44 @@ public class ChickensBrain : BehaviorBrain
 
     protected override void UpdateIdle()
     {
-        if (isDelay) return;
-        if (FOV == null) return;
+        //if (isDelay) return;
+        //if (FOV == null) return;
 
-        if(FOV.FindClosetObject() != null)
-        {   // TODO: 시야 범위 안에 목표물이 있다면 이동 상태로 변경
-            Target = FOV.FindClosetObject();
-            State = Define.CharacterState.Moving;
-            return;
-        }
+        //if(FOV.FindClosetObject() != null)
+        //{   // TODO: 시야 범위 안에 목표물이 있다면 이동 상태로 변경
+        //    Target = FOV.FindClosetObject();
+        //    State = Define.CharacterState.Moving;
+        //    return;
+        //}
 
-        if(Random.Range(0, 101) < 50)
-        {   // TODO: 50% 확률로 자유 이동 실행
-            Vector3 randPosition = transform.position + Random.insideUnitSphere * 1.5f;
-            randPosition.y = 0f;
+        //if(Random.Range(0, 101) < 50)
+        //{   // TODO: 50% 확률로 자유 이동 실행
+        //    Vector3 randPosition = transform.position + Random.insideUnitSphere * 1.5f;
+        //    randPosition.y = 0f;
 
-            while(true)
-            {
-                Vector3 centerVec = randPosition - Vector3.zero;
-                float centerDistance = centerVec.magnitude;
-                if (centerDistance > 5f)
-                {
-                    randPosition = transform.position + Random.insideUnitSphere * 1.5f;
-                    randPosition.y = 0f;
-                }
-                else break;
-            }
+        //    while(true)
+        //    {
+        //        Vector3 centerVec = randPosition - Vector3.zero;
+        //        float centerDistance = centerVec.magnitude;
+        //        if (centerDistance > 5f)
+        //        {
+        //            randPosition = transform.position + Random.insideUnitSphere * 1.5f;
+        //            randPosition.y = 0f;
+        //        }
+        //        else break;
+        //    }
 
-            destPosition = randPosition;
-            State = Define.CharacterState.Moving;
-            return;
-        }
-        else
-        {
-            if (!isDelay)
-            {
-                StartCoroutine(DelayTime());
-            }
-        }
+        //    destPosition = randPosition;
+        //    State = Define.CharacterState.Moving;
+        //    return;
+        //}
+        //else
+        //{
+        //    if (!isDelay)
+        //    {
+        //        StartCoroutine(DelayTime());
+        //    }
+        //}
     }
 
     private IEnumerator DelayTime()
@@ -86,31 +86,31 @@ public class ChickensBrain : BehaviorBrain
 
     protected override void UpdateMoving()
     {
-        if (Target != null)
-        {   // TODO: 목표물이 있는 이동일 경우
-            destPosition = Target.transform.position;
-            float distance = (destPosition - transform.position).magnitude;
-            if (distance <= (float)DNA.EatRange)
-            {
-                if (Target.CompareTag("Feed"))
-                {
-                    State = Define.CharacterState.Eat;
-                    FOV.DebugMode = false;
-                    return;
-                }
-            }
-        }
+        //if (Target != null)
+        //{   // TODO: 목표물이 있는 이동일 경우
+        //    destPosition = Target.transform.position;
+        //    float distance = (destPosition - transform.position).magnitude;
+        //    if (distance <= (float)DNA.EatRange)
+        //    {
+        //        if (Target.CompareTag("Feed"))
+        //        {
+        //            State = Define.CharacterState.Eat;
+        //            FOV.DebugMode = false;
+        //            return;
+        //        }
+        //    }
+        //}
 
-        Vector3 dir = destPosition - transform.position;
-        dir.y = 0;
+        //Vector3 dir = destPosition - transform.position;
+        //dir.y = 0;
 
-        if (dir.magnitude < 0.1f) State = Define.CharacterState.Idle;
-        else
-        {
-            float moveDist = Mathf.Clamp((float)DNA.MoveSpeed * Time.deltaTime, 0, dir.magnitude);
-            transform.position += dir.normalized * moveDist;
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), 20f * Time.deltaTime);
-        }
+        //if (dir.magnitude < 0.1f) State = Define.CharacterState.Idle;
+        //else
+        //{
+        //    float moveDist = Mathf.Clamp((float)DNA.MoveSpeed * Time.deltaTime, 0, dir.magnitude);
+        //    transform.position += dir.normalized * moveDist;
+        //    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), 20f * Time.deltaTime);
+        //}
     }
 
     protected override void UpdateEat()

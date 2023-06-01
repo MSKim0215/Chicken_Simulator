@@ -26,23 +26,24 @@ public class GameScene : BaseScene
         //Managers.UI.ShowSceneUI<UI_Joystick>();
         //Managers.UI.ShowSceneUI<UI_AttackButton>().SetPlayer(player);
 
-        GameObject chickFlock = GameObject.Find("ChickFlock");
-        if(chickFlock == null)
+        for(int i = 0; i < Managers.Game.ChickensGroupFlock.startingCount; i++)
         {
-            chickFlock = new GameObject { name = "ChickFlock" };
+            Managers.Game.Spawn(Define.WorldObject.ChickGroup, "Unit/Chick").GetComponent<ChickensBrain>().MakeDNA();
         }
 
-        for(int i = 0; i < Managers.Game.BeginPopulationSize; i++)
-        {
-            Managers.Game.Spawn("Unit/Chick", chickFlock.transform).GetComponent<ChickensBrain>().MakeDNA();
-        }
 
-        GameObject spawner = GameObject.Find("FeedSpawner");
-        if (spawner == null)
-        {
-            spawner = new GameObject { name = "FeedSpawner" };
-        }
-        SpawnManager feedSpawner = spawner.GetOrAddComponent<SpawnManager>();
+
+        //for(int i = 0; i < Managers.Game.BeginPopulationSize; i++)
+        //{
+        //    Managers.Game.Spawn("Unit/Chick", chickFlock.transform).GetComponent<ChickensBrain>().MakeDNA();
+        //}
+
+        //GameObject spawner = GameObject.Find("FeedSpawner");
+        //if (spawner == null)
+        //{
+        //    spawner = new GameObject { name = "FeedSpawner" };
+        //}
+        //SpawnManager feedSpawner = spawner.GetOrAddComponent<SpawnManager>();
     }
 
     public override void Clear()

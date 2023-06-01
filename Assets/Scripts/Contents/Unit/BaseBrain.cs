@@ -6,7 +6,7 @@ public abstract class BaseBrain : MonoBehaviour
 {   // 모든 오브젝트의 컨트롤러 (Feed, Egg, Chick, Chicken, Fox)
     [Header("현재 상태")]
     [SerializeField] protected Define.CharacterState state = Define.CharacterState.Idle;
-    
+
     public virtual Define.CharacterState State
     {
         get => state;

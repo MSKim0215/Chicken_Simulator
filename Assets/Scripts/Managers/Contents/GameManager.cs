@@ -15,6 +15,7 @@ public class GameManager
     public List<GameObject> CurrGeneraionList { private set; get; } = new List<GameObject>();    // 현재 세대
     public int Generation { private set; get; } = 1;     // 세대
     public int BeginPopulationSize => beginPopulationSize;
+    public Flock ChickensGroupFlock { private set; get; }      // 알, 병아리, 닭 둥지
 
     private HashSet<GameObject> eggs = new HashSet<GameObject>();       // 알 집합
     private HashSet<GameObject> chicks = new HashSet<GameObject>();     // 병아리 집합
@@ -33,6 +34,8 @@ public class GameManager
         trailTime = 20f;
         timeScale = 2f;
 
+        ChickensGroupFlock = GameObject.Find("#Chickens Group Flock").GetComponent<Flock>();
+
         eggMaterials.Add(true, Managers.Resource.Load<Material>("Materials/Mutant Egg"));
         eggMaterials.Add(false, Managers.Resource.Load<Material>("Materials/Normal Egg"));
 
@@ -43,49 +46,62 @@ public class GameManager
         chickenMaterials.Add(false, Managers.Resource.Load<Material>("Materials/Normal Chicken"));
     }
 
-    public GameObject Spawn(string path, Transform parent = null)
+    public GameObject Spawn(Define.WorldObject type, string path)
     {
-        GameObject prefab = Managers.Resource.Instantiate(path, parent);
-        switch(prefab.tag)
+        Flock flock = GetFlock(type);
+        GameObject spawnObj = flock.Spawn(path);
+        
+        switch(spawnObj.tag)
         {
-            case "Chick":
-                {
-                    if (!chicks.Contains(prefab))
-                    {
-                        chicks.Add(prefab);
-                        prefab.transform.position = RandomSpawnPoint();
-                        prefab.transform.rotation = RandomSpawnRotate();
-                        OnSpawnEvent?.Invoke(1);
-                    }
-                }
-                break;
-
-            case "Chicken":
-                {
-                    if (!chickens.Contains(prefab))
-                    {
-                        chickens.Add(prefab);
-                        prefab.transform.position = RandomSpawnPoint();
-                        prefab.transform.rotation = RandomSpawnRotate();
-                        OnSpawnEvent?.Invoke(1);
-                    }
-                }
-                break;
-
-            case "Feed":
-                {
-                    if (!feeds.Contains(prefab))
-                    {
-                        feeds.Add(prefab);
-                        prefab.transform.position = RandomSpawnPoint();
-                        prefab.transform.rotation = RandomSpawnRotate();
-                        prefab.transform.position = new Vector3(prefab.transform.position.x, 0.05f, prefab.transform.position.z);
-                        OnSpawnEvent?.Invoke(1);
-                    }
-                }
-                break;
+            case "Egg": if (!eggs.Contains(spawnObj)) eggs.Add(spawnObj); break;
+            case "Chick": if (!chicks.Contains(spawnObj)) chicks.Add(spawnObj); break;
+            case "Chicken": if (!chickens.Contains(spawnObj)) chickens.Add(spawnObj); break;
         }
-        return prefab;
+
+        OnSpawnEvent?.Invoke(1);
+
+        return spawnObj;
+
+        //switch(prefab.tag)
+        //{
+        //    case "Chick":
+        //        {
+        //            if (!chicks.Contains(prefab))
+        //            {
+        //                chicks.Add(prefab);
+        //                prefab.transform.position = RandomSpawnPoint();
+        //                prefab.transform.rotation = RandomSpawnRotate();
+        //                OnSpawnEvent?.Invoke(1);
+        //            }
+        //        }
+        //        break;
+
+        //    case "Chicken":
+        //        {
+        //            if (!chickens.Contains(prefab))
+        //            {
+        //                chickens.Add(prefab);
+        //                prefab.transform.position = RandomSpawnPoint();
+        //                prefab.transform.rotation = RandomSpawnRotate();
+        //                OnSpawnEvent?.Invoke(1);
+        //            }
+        //        }
+        //        break;
+
+        //    case "Feed":
+        //        {
+        //            if (!feeds.Contains(prefab))
+        //            {
+        //                feeds.Add(prefab);
+        //                prefab.transform.position = RandomSpawnPoint();
+        //                prefab.transform.rotation = RandomSpawnRotate();
+        //                prefab.transform.position = new Vector3(prefab.transform.position.x, 0.05f, prefab.transform.position.z);
+        //                OnSpawnEvent?.Invoke(1);
+        //            }
+        //        }
+        //        break;
+        //}
+        //return prefab;
     }
 
     public GameObject Spawn(string path, Vector3 dir, Quaternion eulr, Transform parent = null)
@@ -130,6 +146,15 @@ public class GameManager
                 break;
         }
         return prefab;
+    }
+
+    private Flock GetFlock(Define.WorldObject type)
+    {
+        switch (type)
+        {
+            case Define.WorldObject.ChickGroup: return ChickensGroupFlock;
+        }
+        return null;
     }
 
     public void Despawn(GameObject target)
@@ -429,18 +454,6 @@ public class GameManager
         {
             Despawn(hatchList[i]);
         }
-    }
-
-    private Vector3 RandomSpawnPoint()
-    {
-        Vector3 randRespawnVec = UnityEngine.Random.insideUnitSphere * 5f;
-        randRespawnVec.y = 0;
-        return randRespawnVec;
-    }
-
-    private Quaternion RandomSpawnRotate()
-    {
-        return Quaternion.Euler(0, UnityEngine.Random.Range(0, 360f), 0); 
     }
 
     private void OnDrawGizmos()
