@@ -35,6 +35,7 @@ public class GameManager
         timeScale = 2f;
 
         ChickensGroupFlock = GameObject.Find("#Chickens Group Flock").GetComponent<Flock>();
+        ChickensGroupFlock.Init(Define.WorldObject.ChickGroup);
 
         eggMaterials.Add(true, Managers.Resource.Load<Material>("Materials/Mutant Egg"));
         eggMaterials.Add(false, Managers.Resource.Load<Material>("Materials/Normal Egg"));
@@ -57,9 +58,7 @@ public class GameManager
             case "Chick": if (!chicks.Contains(spawnObj)) chicks.Add(spawnObj); break;
             case "Chicken": if (!chickens.Contains(spawnObj)) chickens.Add(spawnObj); break;
         }
-
         OnSpawnEvent?.Invoke(1);
-
         return spawnObj;
 
         //switch(prefab.tag)

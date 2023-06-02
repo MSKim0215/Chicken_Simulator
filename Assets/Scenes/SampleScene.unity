@@ -389,8 +389,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f80aa501aaf8a042aade7e358be75a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 0
   startingCount: 2
   findNeighborRadius: 1.5
+  agentDensity: 1
 --- !u!1001 &7116089125014251463
 PrefabInstance:
   m_ObjectHideFlags: 0

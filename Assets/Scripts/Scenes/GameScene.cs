@@ -28,7 +28,7 @@ public class GameScene : BaseScene
 
         for(int i = 0; i < Managers.Game.ChickensGroupFlock.startingCount; i++)
         {
-            Managers.Game.Spawn(Define.WorldObject.ChickGroup, "Unit/Chick").GetComponent<ChickensBrain>().MakeDNA();
+            Managers.Game.Spawn(Define.WorldObject.ChickGroup, "Unit/Chick");
         }
 
 
