@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class BaseBrain : MonoBehaviour
+public class BaseBrain : MonoBehaviour
 {   // 모든 오브젝트의 컨트롤러 (Feed, Egg, Chick, Chicken, Fox)
     [Header("현재 상태")]
     [SerializeField] protected Define.CharacterState state = Define.CharacterState.Idle;
@@ -25,12 +25,18 @@ public abstract class BaseBrain : MonoBehaviour
         }
     }
 
+    public Flock AgentFlock { protected set; get; }         // 소속 군집
+    public Collider AgentCollider {  protected set; get; }  // 콜라이더
+
     private void Start()
     {
         Init();
     }
 
-    public abstract void Init();
+    public virtual void Init()
+    {
+        AgentCollider = GetComponent<Collider>();
+    }
 
     protected virtual void Update()
     {

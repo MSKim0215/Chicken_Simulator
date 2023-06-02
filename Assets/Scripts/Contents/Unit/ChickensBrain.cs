@@ -9,6 +9,13 @@ public class ChickensBrain : BehaviorBrain
 
     public ChickensDNA DNA { private set; get; }            // 유전자 DNA
 
+    public override void Init()
+    {
+        base.Init();
+
+        AgentFlock = Managers.Game.ChickensGroupFlock;
+    }
+
     /// <summary>
     /// 신규 DNA 생성
     /// </summary>

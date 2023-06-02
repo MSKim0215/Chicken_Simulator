@@ -13,6 +13,8 @@ public class BehaviorBrain : BaseBrain
 
     public override void Init()
     {
+        base.Init();
+
         FOV = GetComponent<FieldOfView>();
     }
 
